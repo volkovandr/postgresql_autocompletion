@@ -8,7 +8,7 @@ import test1
 class testTest1(unittest.TestCase):
     '''Unit tests to test the module test1'''
 
-    def testAFunctionToTest(self):
+    def test_aFunctionToTest(self):
         '''Tests that the function returns SomeValue'''
         self.assertEqual(
             test1.aFunctionToTest(),

@@ -10,4 +10,5 @@ print("test")
 
 def aFunctionToTest():
     '''Returns a string "SomeValue"'''
+    print("aFunctionToTest is called!")
     return "SomeValue"
