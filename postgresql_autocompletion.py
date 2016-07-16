@@ -12,3 +12,5 @@ except ImportError:
 
 print(sublime)
 print(sublime_plugin)
+
+print("test")
