@@ -1,13 +1,13 @@
-PostgreSQL autocompletion
+# PostgreSQL autocompletion
 Enables autocompletion when writing SQL queries.
 
-Overview
+# Overview
 
-Features
+# Features
 
-Installation
+# Installation
 
-Configuration
+# Configuration
 
-Usage
+# Usage
 
