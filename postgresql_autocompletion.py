@@ -10,7 +10,7 @@ except ImportError:
     sublime_plugin = sublime_plugin_mocker
 
 
-print(sublime)
-print(sublime_plugin)
+class postgresql_autocompletion(sublime_plugin.EventListener):
 
-print("test")
+    def on_query_completions(self, view, prefix, locations):
+        pass
