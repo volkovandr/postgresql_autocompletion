@@ -1,0 +1,1 @@
+print("suplime_plugin_mocker is loaded")
