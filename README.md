@@ -19,5 +19,5 @@ The plugin tries to load real Sublime modules and it it fails it will load the
 mockers.
 
 To run the tests execute
-    python -m unittest discover -v -s unit_test -p *_test.py
+'python -m unittest discover -v -s unit_test -p *_test.py'
 
