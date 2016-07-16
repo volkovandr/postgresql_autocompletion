@@ -1,1 +1,0 @@
-print("sublime_mocker is loaded")
