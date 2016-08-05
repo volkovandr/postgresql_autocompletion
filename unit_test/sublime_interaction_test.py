@@ -31,6 +31,3 @@ class sublime_interaction(unittest.TestCase):
 #        '''The plugin returns nothing when the file being edited
 #        has other syntax than PostgreSQL'''
 #        raise Exception("Not implemented")
-
-test
-
