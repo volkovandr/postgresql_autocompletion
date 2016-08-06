@@ -18,3 +18,14 @@ class sublime_interaction(unittest.TestCase):
         self.assertEqual(view.settings().get('a'), 'a')
         self.assertEqual(view.settings().get('b'), 'b')
         self.assertIsNone(view.settings().get('c'))
+
+    def testViewSelection(self):
+        '''View can have several Selections'''
+        view = sublime.view.View()
+        view.add_selection(sublime.view.View.Selection(2, 3))
+        view.add_selection(sublime.view.View.Selection(50, 60))
+        self.assertEqual(view.sel()[0].begin(), 2)
+        self.assertEqual(view.sel()[0].end(), 3)
+        self.assertEqual(view.sel()[1].begin(), 50)
+        self.assertEqual(view.sel()[1].end(), 60)
+
