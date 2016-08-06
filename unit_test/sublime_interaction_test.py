@@ -17,18 +17,34 @@ class sublime_interaction(unittest.TestCase):
         pa = postgresql_autocompletion.postgresql_autocompletion()
         self.assertIsNotNone(pa)
 
-    def testCanImportSublimeMocker(self):
-        '''Test the module sublime_mocker can be imported'''
-        import sublime_mocker
-        self.assertIsNotNone(sublime_mocker)
-
     def testCanImportSublimePluginMocker(self):
         '''Test the module sublime_plugin_mocker can be imported'''
         import sublime_plugin_mocker
         self.assertIsNotNone(sublime_plugin_mocker)
 
-#    def testReturnsNothingOnNonPostgreSQLSyntax(self):
-#        '''The plugin returns nothing when the file being edited
-#        has other syntax than PostgreSQL'''
-#        raise Exception("Not implemented")
+    def testReturnsNothingOnNonPostgreSQLSyntax(self):
+        '''The plugin returns nothing when the syntax is not PostgreSQL'''
+        from sublime_mocker.view import View
+        v = View({'syntax': 'something else'})
+        pa = postgresql_autocompletion.postgresql_autocompletion()
+        ret = pa.on_query_completions(v, None, None)
+        self.assertEqual(len(ret), 0)
 
+#    def testReturnSomethingOnPostgreSQLSyntax(self):
+#        '''The plugin returns at least something when then file being edited
+#        has PostgreSQL syntax'''
+#        from sublime_mocker import view
+#        view = view.View()
+#        pa = postgresql_autocompletion.postgresql_autocompletion()
+#        ret = pa.on_query_completions(view, None, None)
+#        self.assertGreater(len(ret), 0)
+
+    def testCheckSyntax(self):
+        '''CheckSyntax works'''
+        from sublime_mocker import view
+        v = view.View({'syntax': 'Packages/PostgreSQL Syntax Highlighting/\
+PostgreSQL.tmLanguage'})
+        pa = postgresql_autocompletion.postgresql_autocompletion()
+        self.assertEqual(pa.checkSyntax(v), True)
+        v = view.View({'syntax': 'something else'})
+        self.assertEqual(pa.checkSyntax(v), False)
