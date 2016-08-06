@@ -30,15 +30,6 @@ class sublime_interaction(unittest.TestCase):
         ret = pa.on_query_completions(v, None, None)
         self.assertEqual(len(ret), 0)
 
-#    def testReturnSomethingOnPostgreSQLSyntax(self):
-#        '''The plugin returns at least something when then file being edited
-#        has PostgreSQL syntax'''
-#        from sublime_mocker import view
-#        view = view.View()
-#        pa = postgresql_autocompletion.postgresql_autocompletion()
-#        ret = pa.on_query_completions(view, None, None)
-#        self.assertGreater(len(ret), 0)
-
     def testCheckSyntax(self):
         '''CheckSyntax works'''
         from sublime_mocker import view
