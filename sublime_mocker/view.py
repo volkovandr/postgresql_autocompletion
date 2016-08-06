@@ -34,3 +34,10 @@ class View():
 
     def add_selection(self, new_selection):
         self._selections.append(new_selection)
+
+    def set_text(self, text):
+        self._text = text
+
+    def substr(self, position):
+        if type(position).__name__ == "int":
+            return self._text[position]

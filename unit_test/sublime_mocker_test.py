@@ -4,7 +4,7 @@ import unittest
 import sublime_mocker as sublime
 from sublime_mocker import *
 
-class sublime_interaction(unittest.TestCase):
+class sublime_mocker(unittest.TestCase):
     '''Unit tests to test the sublime_mocker module'''
 
     def testCanCreateView(self):
@@ -30,3 +30,18 @@ class sublime_interaction(unittest.TestCase):
         self.assertEqual(view.sel()[1].begin(), 50)
         self.assertEqual(view.sel()[1].end(), 60)
 
+    def testCanSetText(self):
+        '''It is possible to set text of the view'''
+        view = sublime.view.View()
+        view.set_text("Some text")
+
+    def testSubstrPoint(self):
+        '''Can get one character from the text'''
+        view = sublime.view.View()
+        view.set_text("Some text")
+        self.assertEqual(view.substr(0), "S")
+        self.assertEqual(view.substr(1), "o")
+        self.assertEqual(view.substr(2), "m")
+        self.assertEqual(view.substr(3), "e")
+        self.assertEqual(view.substr(4), " ")
+        self.assertEqual(view.substr(5), "t")
