@@ -2,7 +2,7 @@
 
 import unittest
 import sublime_mocker as sublime
-
+from sublime_mocker import *
 
 class sublime_interaction(unittest.TestCase):
     '''Unit tests to test the sublime_mocker module'''
@@ -22,8 +22,9 @@ class sublime_interaction(unittest.TestCase):
     def testViewSelection(self):
         '''View can have several Selections'''
         view = sublime.view.View()
-        view.add_selection(sublime.view.View.Selection(2, 3))
-        view.add_selection(sublime.view.View.Selection(50, 60))
+        sel = sublime.selection.Selection(2, 3)
+        view.add_selection(sel)
+        view.add_selection(sublime.selection.Selection(50, 60))
         self.assertEqual(view.sel()[0].begin(), 2)
         self.assertEqual(view.sel()[0].end(), 3)
         self.assertEqual(view.sel()[1].begin(), 50)

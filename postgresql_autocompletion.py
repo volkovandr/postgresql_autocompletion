@@ -17,7 +17,6 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
             return []
 
     def checkSyntax(self, view):
-        print(view.settings().get('syntax'))
         if view.settings().get('syntax') == \
                 "Packages/PostgreSQL Syntax Highlighting/\
 PostgreSQL.tmLanguage":
