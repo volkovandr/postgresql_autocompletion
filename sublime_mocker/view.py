@@ -41,3 +41,5 @@ class View():
     def substr(self, position):
         if type(position).__name__ == "int":
             return self._text[position]
+        if type(position).__name__ == "Region":
+            return self._text[position.begin() - 1:position.end() ]

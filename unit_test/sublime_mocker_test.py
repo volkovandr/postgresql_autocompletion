@@ -45,3 +45,9 @@ class sublime_mocker(unittest.TestCase):
         self.assertEqual(view.substr(3), "e")
         self.assertEqual(view.substr(4), " ")
         self.assertEqual(view.substr(5), "t")
+
+    def testSubstrRegion(self):
+        '''Can get several characters from the text'''
+        view = sublime.view.View()
+        view.set_text("Some text")
+        self.assertEqual(view.substr(sublime.region.Region(4, 6)), "e t")

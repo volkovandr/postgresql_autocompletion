@@ -1,1 +1,1 @@
-__all__ = ["view", "selection"]
+__all__ = ["view", "selection", "region"]
