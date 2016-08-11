@@ -26,17 +26,18 @@ class View():
             }
     ):
         self._settings = View.Settings(settings_map)
+        self._selections = []
+        print("View initialized: ", self)
 
     def settings(self):
         return self._settings
-
-    _selections = []
 
     def sel(self):
         return self._selections
 
     def add_selection(self, new_selection):
         self._selections.append(new_selection)
+        print("Selection number", len(self._selections))
 
     def set_text(self, text):
         self._text = text
