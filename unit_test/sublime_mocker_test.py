@@ -51,6 +51,8 @@ class sublime_mocker(unittest.TestCase):
         view = sublime.view.View()
         view.set_text("Some text")
         self.assertEqual(view.substr(sublime.region.Region(4, 6)), "e t")
+        self.assertEqual(view.substr(sublime.region.Region(1, 6)), "Some t")
+        self.assertEqual(view.substr(sublime.region.Region(1, 9)), "Some text")
 
     def testWord(self):
         '''Can extract a word(s) from a text'''
@@ -62,3 +64,5 @@ class sublime_mocker(unittest.TestCase):
         self.assertEqual(view.substr(reg), "about")
         reg = view.word(sublime.region.Region(18, 20))
         self.assertEqual(view.substr(reg), "Zorro")
+        reg = view.word(sublime.region.Region(1, 1))
+        self.assertEqual(view.substr(reg), "Some")
