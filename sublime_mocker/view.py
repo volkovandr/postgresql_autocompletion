@@ -3,19 +3,10 @@
 
 import re
 from sublime_mocker import region
+from sublime_mocker import settings
+
 
 class View():
-    class Settings():
-
-        def __init__(self, settings_map):
-            self.settings = settings_map
-
-        def get(self, setting_name):
-            if setting_name in self.settings:
-                return self.settings[setting_name]
-            else:
-                return None
-        pass
 
     def __init__(
             self,
@@ -25,7 +16,7 @@ class View():
                     PostgreSQL.tmLanguage'
             }
     ):
-        self._settings = View.Settings(settings_map)
+        self._settings = settings.Settings(settings_map)
         self._selections = []
 
     def settings(self):

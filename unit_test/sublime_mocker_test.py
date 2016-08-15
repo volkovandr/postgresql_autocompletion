@@ -67,3 +67,10 @@ class sublime_mocker(unittest.TestCase):
         self.assertEqual(view.substr(reg), "Zorro")
         reg = view.word(sublime.region.Region(1, 1))
         self.assertEqual(view.substr(reg), "Some")
+
+    def testLoadSettings(self):
+        '''Test default settings'''
+        settings = sublime.load_settings(
+            "postgresql_autocompletion.sublime-settings")
+        self.assertEqual(settings.get("postgresql_autocompletion_db_host"),
+            "localhost")
