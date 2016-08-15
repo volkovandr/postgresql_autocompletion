@@ -37,3 +37,14 @@ def getQueryText(view):
     query_text = \
         view.substr(view.word(sublime.Region(beg, end))).strip()
     return query_text
+
+
+def getSettings(view, setting_name):
+    '''Looks for the given setting in the projects settings when not found then
+    in the global settings'''
+    view_setting = view.settings().get(setting_name)
+    if view_setting is not None:
+        return view_setting
+    global_setting = sublime.load_settings(
+        "postgresql_autocompletion.sublime-settings").get(setting_name)
+    return global_setting
