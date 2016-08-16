@@ -31,3 +31,11 @@ class sublime_interaction(unittest.TestCase):
         v.sel()[0].a = 70
         v.sel()[0].b = 70
         self.assertEqual(getQueryText(v), "This is the third query")
+
+    def testGetSettings(self):
+        '''getSettings works'''
+        v = view.View({'postgresql_autocompletion_db_host': 'whatever'})
+        self.assertEqual(getSettings(v, "postgresql_autocompletion_db_name"),
+                         "test")
+        self.assertEqual(getSettings(v, "postgresql_autocompletion_db_host"),
+                         "whatever")
