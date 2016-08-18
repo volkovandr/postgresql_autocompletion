@@ -1,7 +1,7 @@
 '''Unit tests for the sublime_mocker module'''
 
 import unittest
-import sublime_mocker as sublime
+from .mockers import sublime_mocker as sublime
 from sublime_mocker import *
 
 class sublime_mocker(unittest.TestCase):

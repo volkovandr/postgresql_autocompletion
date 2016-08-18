@@ -4,8 +4,8 @@ try:
     import sublime
     import sublime_plugin
 except ImportError:
-    import sublime_mocker
-    import sublime_plugin_mocker
+    from .mockers import sublime_mocker
+    from .mockers import sublime_plugin_mocker
     sublime = sublime_mocker
     sublime_plugin = sublime_plugin_mocker
 
