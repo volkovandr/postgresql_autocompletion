@@ -37,8 +37,3 @@ class import_lib(unittest.TestCase):
     def testCanImportLibraryModule(self):
         import postgresql_autocompletion_lib
         self.assertIsNotNone(postgresql_autocompletion_lib)
-
-    def testCanImportSQLParser(self):
-        from postgresql_autocompletion_lib import sqlparser
-        sp = sqlparser.sqlparser()
-        self.assertIsNotNone(sp)

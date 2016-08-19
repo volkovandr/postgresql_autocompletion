@@ -1,5 +1,5 @@
 '''Implementation of an SQL parser used by the plugin'''
 
 
-class sqlparser:
+def parseSQL(query_text):
     pass
