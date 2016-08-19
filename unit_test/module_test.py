@@ -30,3 +30,15 @@ class import_mocker_modules(unittest.TestCase):
         '''Test the module sublime_mocker can be imported'''
         import sublime_mocker
         self.assertIsNotNone(sublime_mocker)
+
+class import_lib(unittest.TestCase):
+    '''Test that the library module and classes can be loaded'''
+
+    def testCanImportLibraryModule(self):
+        import postgresql_autocompletion_lib
+        self.assertIsNotNone(postgresql_autocompletion_lib)
+
+    def testCanImportSQLParser(self):
+        from postgresql_autocompletion_lib import sqlparser
+        sp = sqlparser.sqlparser()
+        self.assertIsNotNone(sp)
