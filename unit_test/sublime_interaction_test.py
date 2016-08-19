@@ -24,10 +24,10 @@ class sublime_interaction(unittest.TestCase):
         v.set_text("This is the first query; This is the second query; " +
                    "This is the third query")
         v.add_selection(selection.Selection(8, 8))
-        self.assertEqual(getQueryText(v), "This is the first query")
+        self.assertEqual(getQueryText(v), ("This is the first query", 8))
         v.sel()[0].a = 40
         v.sel()[0].b = 40
-        self.assertEqual(getQueryText(v), "This is the second query")
+        self.assertEqual(getQueryText(v), ("This is the second query", 15))
         v.sel()[0].a = 70
         v.sel()[0].b = 70
-        self.assertEqual(getQueryText(v), "This is the third query")
+        self.assertEqual(getQueryText(v), ("This is the third query", 19))

@@ -22,6 +22,8 @@ def checkSyntax(view):
 
 
 def getQueryText(view):
+    '''Returns the text of the current query (at the cursor)
+    and the position of the cursor relative to the beginning of the query'''
     # searching backwards until semicolon
     beg = view.sel()[0].begin() - 1
     while view.substr(beg) != ";" and beg > 1:
@@ -35,8 +37,10 @@ def getQueryText(view):
             break
         end += 1
     query_text = \
-        view.substr(view.word(sublime.Region(beg, end))).strip()
-    return query_text
+        view.substr(view.word(sublime.Region(beg, end)))
+    return (query_text.strip(), view.sel()[0].begin() -
+            view.word(sublime.Region(beg, end)).begin() -
+            (len(query_text) - len(query_text.lstrip())) + 1)
 
 
 def getSettings(view, setting_name):
