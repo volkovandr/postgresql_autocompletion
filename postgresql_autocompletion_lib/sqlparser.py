@@ -2,4 +2,5 @@
 
 
 def parseSQL(query_text):
-    pass
+    if query_text is None or len(query_text) == 0:
+        return None
