@@ -1,6 +1,6 @@
 '''Implementation of an SQL parser used by the plugin'''
 
-from pyparsing.pyparsing import *
+from postgresql_autocompletion_lib.pyparsing import *
 
 
 def base_parse(query_text):
