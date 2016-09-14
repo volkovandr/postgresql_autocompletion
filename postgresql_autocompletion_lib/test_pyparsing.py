@@ -8,29 +8,45 @@
 from pyparsing import CaselessLiteral, Word, upcaseTokens, \
     delimitedList, Optional, Combine, Group, alphas, nums, alphanums, \
     ParseException, Forward, oneOf, quotedString, ZeroOrMore, restOfLine,\
-    Keyword, originalTextFor
+    Keyword, originalTextFor, locatedExpr
 
+cp = 0
+token_at = None
 
-def test(str):
+def test(str, cursor_position):
+    global cp
+    global token_at
+    cp = cursor_position
     print(str, "->")
     try:
         tokens = simpleSQL.parseString(str)
+        selectList = tokens.select[1]
+        tables = tokens.from_[1]
+        if tokens.where:
+            where = tokens.where[1]
         print("tokens          =", tokens)
-        print("Select clause   =", tokens.select)
-        print("Select list     =", tokens.select[1])
-        print("From clause     =", tokens.from_)
-        print("Tables          =", tokens.from_[1])
-        print("Where clause    =", tokens.where)
-        print("Where condition =", tokens.where)
+        print("Select list     =", selectList)
+        print("Tables          =", tables)
+        if where:
+            print("Where condition =", where)
+        if selectList[0] <= cursor_position <= selectList[2]:
+            print("Cursor is in the Select list")
+        elif tables[0] <= cursor_position <= tables[2]:
+            print("Cursor is in the Tables")
+        elif where:
+            if where[0] <= cursor_position <= where[2]:
+                print("Cursor is in the where clause")
     except ParseException as err:
         print(" " * err.loc + "^\n" + err.msg)
         print(err)
-    print
 
-def parse_action_test(s, loc, toks):
-    print("s", s)
-    print("loc", loc)
-    print("toks", toks)
+def parse_action1(s, loc, toks):
+    if cp >= loc and cp <= loc + len(toks[0]):
+        global token_at
+        token_at = toks[0]
+        print("We are here:", toks[0])
+
+
 
 # define SQL tokens
 selectStmt = Forward()
@@ -41,8 +57,7 @@ ident = Word(alphas, alphanums + "_$").setName("identifier")
 columnName = (delimitedList(ident, ".", combine=True))
 columnNameList = Group(delimitedList(columnName))
 tableName = (delimitedList(ident, ".", combine=True))
-tableNameList = Group(delimitedList(tableName)). \
-    setParseAction(parse_action_test)
+tableNameList = Group(delimitedList(tableName))
 
 whereExpression = Forward()
 and_ = Keyword("and", caseless=True)
@@ -68,13 +83,13 @@ whereCondition = Group(
     ("(" + whereExpression + ")")
 )
 whereExpression << whereCondition + ZeroOrMore((and_ | or_) + whereExpression)
-
+whereExpression = locatedExpr(whereExpression)
 # define the grammar
-selectStmt << (
-    Group(selectToken + ('*' | columnNameList)).setResultsName("select") +
-    Group(fromToken + tableNameList).setResultsName("from_") +
-    Optional(Group(CaselessLiteral("where") +
-                   whereExpression), "").setResultsName("where"))
+selectList = Group(selectToken + locatedExpr('*' | columnNameList)).setResultsName("select")
+fromClause = Group(fromToken + locatedExpr(tableNameList)).setResultsName("from_")
+whereClause = Group(CaselessLiteral("where") +
+                   whereExpression).setResultsName("where")
+selectStmt << ( selectList + fromClause + Optional(whereClause, ""))
 
 simpleSQL = selectStmt
 
@@ -83,7 +98,7 @@ oracleSqlComment = "--" + restOfLine
 simpleSQL.ignore(oracleSqlComment)
 
 
-test("SELECT a, b, c from table1, table2 WHERE a = b")
+test("SELECT a, b, c from table1, table2       where mok = bok", 30)
 #test("select * from SYS.XYZZY")
 #test("Select A from Sys.dual")
 #test("Select A,B,C from Sys.dual")

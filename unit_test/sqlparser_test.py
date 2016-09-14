@@ -14,4 +14,3 @@ class basic_parser_tests(unittest.TestCase):
         query_text = "SELECT a, b, c FROM table"
         parsed = sqlparser.base_parse(query_text)
         self.assertEqual(parsed["select"], ("a, b, c", 8, 14))
-

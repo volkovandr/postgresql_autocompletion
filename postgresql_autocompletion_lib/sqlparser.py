@@ -18,7 +18,6 @@ def base_parse(query_text):
     [something] [SELECT <select block>] [FROM <from block>]
     [WHERE <where block>] [GROUP BY <group by block]
     [HAVING <having block>] [WINDOW <window block>]
-    [UNION|EXCEPT|INTERSECT [ALL|DISTINCT]]
     [ORDER BY <order by block>]
     [LIMIT <limit block>]
     [OFFSET <offset block>]
