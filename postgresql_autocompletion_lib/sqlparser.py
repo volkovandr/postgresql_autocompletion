@@ -3,6 +3,12 @@
 from postgresql_autocompletion_lib.pyparsing import *
 
 
+def addToDict(dict_, token, key):
+    if token:
+        dict_[key] = (token[1], token[0] + 1, token[2] + 1)
+    return dict_
+
+
 def base_parse(query_text):
     '''Parses a given SQL query and returns a dictionary of the elements of it.
     Example: given query is SELECT a, b, c FROM table1 WHERE a>b
@@ -29,3 +35,20 @@ def base_parse(query_text):
     '''
     if query_text is None or len(query_text) == 0:
         return None
+
+    selectKeyword = Keyword("SELECT", caseless=True)
+    fromKeyword = Keyword("FROM", caseless=True)
+    separatorKeyword = selectKeyword | fromKeyword | StringEnd()
+
+    selectBlock = selectKeyword + \
+        locatedExpr(SkipTo(separatorKeyword)).setResultsName("selectList")
+    fromBlock = fromKeyword + \
+        locatedExpr(SkipTo(separatorKeyword)).setResultsName("fromList")
+
+    query = selectBlock + Optional(fromBlock)
+
+    tokens = query.parseString(query_text)
+    ret = addToDict({}, tokens.selectList, "select")
+    ret = addToDict(ret, tokens.fromList, "from")
+
+    return ret
