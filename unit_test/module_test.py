@@ -31,9 +31,19 @@ class import_mocker_modules(unittest.TestCase):
         import sublime_mocker
         self.assertIsNotNone(sublime_mocker)
 
+    def testCanImportDbmockerQueryService(self):
+        import query_service_mocker
+        self.assertIsNotNone(query_service_mocker)
+
+
 class import_lib(unittest.TestCase):
     '''Test that the library module and classes can be loaded'''
 
     def testCanImportLibraryModule(self):
         import postgresql_autocompletion_lib
         self.assertIsNotNone(postgresql_autocompletion_lib)
+
+    def testCanImportPostgresqlQueryService(self):
+        from postgresql_autocompletion_lib.postgresql_query_service \
+            import postgresql_query_service
+        self.assertIsNotNone(postgresql_query_service)

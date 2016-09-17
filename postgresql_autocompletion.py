@@ -9,10 +9,15 @@ except ImportError:
     sublime = sublime_mocker
     sublime_plugin = sublime_plugin_mocker
 
+from postgresql_autocompletion_lib.postgresql_query_service \
+    import postgresql_query_service
 from postgresql_autocompletion_lib.helpers import checkSyntax
 
 
 class postgresql_autocompletion(sublime_plugin.EventListener):
+
+    def __init__(db_talker=postgresql_query_service()):
+        pass
 
     def on_query_completions(self, view, prefix, locations):
         # Do nothing when it is not PostgreSQL script file
