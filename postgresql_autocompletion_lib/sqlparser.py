@@ -9,6 +9,20 @@ def addToDict(dict_, token, key):
     return dict_
 
 
+def cursorPositionInQuery(cursor_position, parse_results):
+    '''Takes the result of base_parse. Returns the name of the query part
+    where the cursor is, the text of this part,
+    and the relative cursor position'''
+    for query_part in parse_results:
+        if parse_results[query_part][1] <= \
+                cursor_position <= \
+                parse_results[query_part][2]:
+            return (
+                query_part,
+                parse_results[query_part][0],
+                cursor_position - parse_results[query_part][1])
+
+
 def base_parse(query_text):
     '''Parses a given SQL query and returns a dictionary of the elements of it.
     Example: given query is SELECT a, b, c FROM table1 WHERE a>b

@@ -9,7 +9,7 @@ except ImportError:
     sublime = sublime_mocker
     sublime_plugin = sublime_plugin_mocker
 
-from postgresql_autocompletion_lib.helpers import *
+from postgresql_autocompletion_lib.helpers import checkSyntax
 
 
 class postgresql_autocompletion(sublime_plugin.EventListener):
@@ -18,4 +18,6 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
         # Do nothing when it is not PostgreSQL script file
         if not checkSyntax(view):
             return []
-
+        # get query text and cursor position
+        # parse the query and determine in which part of the query is the cursor
+        # depending on the active part of the query suggest different autocompletion options
