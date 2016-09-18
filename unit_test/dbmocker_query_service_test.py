@@ -6,7 +6,6 @@ from query_service_mocker.dbmocker_query_service \
 
 
 class dbmocker(unittest.TestCase):
-    '''Unit tests to test the module test1'''
 
     def testCanLoadClass(self):
         '''Can instantiate the class'''

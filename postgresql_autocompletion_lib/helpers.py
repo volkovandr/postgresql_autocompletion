@@ -43,7 +43,7 @@ def getQueryText(view):
             (len(query_text) - len(query_text.lstrip())) + 1)
 
 
-def getSettings(view, setting_name):
+def getSetting(view, setting_name):
     '''Looks for the given setting in the projects settings when not found then
     in the global settings'''
     view_setting = view.settings().get(setting_name)
@@ -52,3 +52,20 @@ def getSettings(view, setting_name):
     global_setting = sublime.load_settings(
         "postgresql_autocompletion.sublime-settings").get(setting_name)
     return global_setting
+
+
+def getSettings(view):
+    '''Returns all the settings as dictionary.
+    The missing settings will get their default values.
+    The new settings that will be found in the settings file are ignored'''
+    settings = {
+        "postgresql_autocompletion_db_host": "localhost",
+        "postgresql_autocompletion_db_port": "5432",
+        "postgresql_autocompletion_db_name": "postgres",
+        "postgresql_autocompletion_db_user": "user",
+        "postgresql_autocompletion_db_password": "password"}
+    for setting_key in settings:
+        setting_value = getSetting(view, setting_key)
+        if setting_value is not None:
+            settings[setting_key] = setting_value
+    return settings

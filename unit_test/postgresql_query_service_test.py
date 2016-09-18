@@ -6,7 +6,6 @@ from postgresql_autocompletion_lib.postgresql_query_service \
 
 
 class postgresql_query_service_test(unittest.TestCase):
-    '''Unit tests to test the module test1'''
 
     def testCanLoadClass(self):
         '''Can instantiate the class'''

@@ -11,5 +11,4 @@ def load_settings(base_name):
         base_name
     with open(settings_file) as json_file:
         json_data = json.load(json_file)
-    print(json_data)
     return Settings(json_data)

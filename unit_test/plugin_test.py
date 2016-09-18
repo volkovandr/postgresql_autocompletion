@@ -5,7 +5,6 @@ import unittest
 
 
 class genral_functionality(unittest.TestCase):
-    '''Unit tests to test the module test1'''
 
     def testReturnsNothingOnNonPostgreSQLSyntax(self):
         '''The plugin returns nothing when the syntax is not PostgreSQL'''

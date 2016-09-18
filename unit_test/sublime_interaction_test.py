@@ -8,7 +8,6 @@ from sublime_mocker import selection
 
 
 class sublime_interaction(unittest.TestCase):
-    '''Unit tests to test the module test1'''
 
     def testCheckSyntax(self):
         '''CheckSyntax works'''
@@ -31,3 +30,15 @@ class sublime_interaction(unittest.TestCase):
         v.sel()[0].a = 70
         v.sel()[0].b = 70
         self.assertEqual(getQueryText(v), ("This is the third query", 19))
+
+    def testGetSettings(self):
+        '''getSettings works'''
+        default_settings = {
+            "postgresql_autocompletion_db_host": "localhost",
+            "postgresql_autocompletion_db_port": "5432",
+            "postgresql_autocompletion_db_name": "test",
+            "postgresql_autocompletion_db_user": "test",
+            "postgresql_autocompletion_db_password": "password"}
+        v = view.View()
+        settings = getSettings(v)
+        self.assertEqual(settings, default_settings)

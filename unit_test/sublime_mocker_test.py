@@ -4,6 +4,7 @@ import unittest
 import sublime_mocker as sublime
 from sublime_mocker import *
 
+
 class sublime_mocker(unittest.TestCase):
     '''Unit tests to test the sublime_mocker module'''
 
@@ -73,4 +74,4 @@ class sublime_mocker(unittest.TestCase):
         settings = sublime.load_settings(
             "postgresql_autocompletion.sublime-settings")
         self.assertEqual(settings.get("postgresql_autocompletion_db_host"),
-            "localhost")
+                         "localhost")

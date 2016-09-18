@@ -18,6 +18,7 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
 
     def __init__(self, db_talker=postgresql_query_service()):
         super(postgresql_autocompletion, self).__init__()
+        self.db_query_service = db_talker
         pass
 
     def on_query_completions(self, view, prefix, locations):
