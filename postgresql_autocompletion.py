@@ -16,7 +16,8 @@ from postgresql_autocompletion_lib.helpers import checkSyntax
 
 class postgresql_autocompletion(sublime_plugin.EventListener):
 
-    def __init__(db_talker=postgresql_query_service()):
+    def __init__(self, db_talker=postgresql_query_service()):
+        super(postgresql_autocompletion, self).__init__()
         pass
 
     def on_query_completions(self, view, prefix, locations):

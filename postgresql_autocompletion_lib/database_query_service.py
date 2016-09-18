@@ -8,4 +8,3 @@ class database_query_service:
 
     def getSchemas(self):
         raise NotImplementedError()
-
