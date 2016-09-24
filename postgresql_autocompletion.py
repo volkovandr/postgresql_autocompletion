@@ -14,7 +14,7 @@ from postgresql_autocompletion_lib.postgresql_query_service \
 from postgresql_autocompletion_lib.helpers \
     import checkSyntax, getQueryText
 from postgresql_autocompletion_lib.sqlparser import base_parse, \
-    cursorPositionInQuery, parseFrom, cursorPositionInFrom
+    cursorPositionInQuery, parseFrom
 
 
 class postgresql_autocompletion(sublime_plugin.EventListener):
@@ -33,7 +33,8 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
         sql_block = cursorPositionInQuery(cursor_pos, base_parse_results)
         if sql_block[0] == "from":
             from_parse_results = parseFrom(sql_block[1])
-            from_block = cursorPositionInFrom(sql_block[2], from_parse_results)
+            from_block = cursorPositionInQuery(sql_block[2], from_parse_results)
             if from_block[0] == "schema_name":
                 schemas = db_query_service.getSchemas()
                 return schemas
+

@@ -5,112 +5,65 @@
 #
 # Copyright (c) 2003, Paul McGuire
 #
-from pyparsing import CaselessLiteral, Word, upcaseTokens, \
-    delimitedList, Optional, Combine, Group, alphas, nums, alphanums, \
-    ParseException, Forward, oneOf, quotedString, ZeroOrMore, restOfLine,\
-    Keyword, originalTextFor, locatedExpr
+from pyparsing import *
 
-cp = 0
-token_at = None
 
-def test(str, cursor_position):
-    global cp
-    global token_at
-    cp = cursor_position
-    print(str, "->")
+identifier = Word(alphas, alphanums).setName("identifier")
+as_keyword = Keyword("as", caseless=True).setName("AS")
+
+schemaname = locatedExpr(identifier).setResultsName("schemaname")
+tablename = locatedExpr(identifier).setResultsName("tablename")
+table_or_schemaname = locatedExpr(identifier).setResultsName("table_or_schemaname")
+alias = locatedExpr(identifier).setResultsName("alias")
+
+full_qualified_table_name = schemaname + "." + tablename + \
+    Optional(as_keyword) + Optional(alias)
+unqualified_table_name = tablename + Optional(as_keyword) + alias
+
+from_element = Suppress(StringStart() | ",") + (full_qualified_table_name | unqualified_table_name | table_or_schemaname) + (FollowedBy(",") | FollowedBy(StringEnd()))
+
+parse = from_element.parseWithTabs()
+
+def test(test_str):
+    print(">>>", test_str)
     try:
-        tokens = simpleSQL.parseString(str)
-        selectList = tokens.select[1]
-        tables = tokens.from_[1]
-        if tokens.where:
-            where = tokens.where[1]
-        print("tokens          =", tokens)
-        print("Select list     =", selectList)
-        print("Tables          =", tables)
-        if where:
-            print("Where condition =", where)
-        if selectList[0] <= cursor_position <= selectList[2]:
-            print("Cursor is in the Select list")
-        elif tables[0] <= cursor_position <= tables[2]:
-            print("Cursor is in the Tables")
-        elif where:
-            if where[0] <= cursor_position <= where[2]:
-                print("Cursor is in the where clause")
-    except ParseException as err:
-        print(" " * err.loc + "^\n" + err.msg)
-        print(err)
-
-def parse_action1(s, loc, toks):
-    if cp >= loc and cp <= loc + len(toks[0]):
-        global token_at
-        token_at = toks[0]
-        print("We are here:", toks[0])
+        tokens = parse.scanString(test_str)
+        #print(tokens)
+        for substring in tokens:
+            from_element = substring[0]
+            print(">>>>>", test_str[substring[1]:substring[2]])
+            if from_element.schemaname != '':
+                print("schemaname:", from_element.schemaname)
+            if from_element.tablename != '':
+                print("tablename :", from_element.tablename)
+            if from_element.table_or_schemaname != '':
+                print("t_or_sch  :", from_element.table_or_schemaname)
+            if from_element.alias != '':
+                print("alias     :", from_element.alias)
+    except ParseException as e:
+        print(e)
+    print()
 
 
+test_strings = [
+    "",
+    "table1",
+    "table1 as t1",
+    "table1 t1",
+    "schema1.table1 as t1",
+    "schema1.table1 t1",
+    "schema1.table1",
+    "table1, table2",
+    "table1 as t1, table2 as t2",
+    "table1, schema2.table2 t2",
+    "schema1.table1 t1, schema2.table2 as t2",
+    "s1.t1, s2.t2, s3.t3, s4.t4",
+    "bla1 bla2 bla3 bla4",
+    '''schema1.table1
+    as zorro  ,
+    schema2.table2
+    mumba''',
+    "bla.bla, zok.mok, a b c, kum.zum"]
 
-# define SQL tokens
-selectStmt = Forward()
-selectToken = Keyword("select", caseless=True)
-fromToken = Keyword("from", caseless=True)
-
-ident = Word(alphas, alphanums + "_$").setName("identifier")
-columnName = (delimitedList(ident, ".", combine=True))
-columnNameList = Group(delimitedList(columnName))
-tableName = (delimitedList(ident, ".", combine=True))
-tableNameList = Group(delimitedList(tableName))
-
-whereExpression = Forward()
-and_ = Keyword("and", caseless=True)
-or_ = Keyword("or", caseless=True)
-in_ = Keyword("in", caseless=True)
-
-E = CaselessLiteral("E")
-binop = oneOf("= != < > >= <= eq ne lt le gt ge", caseless=True)
-arithSign = Word("+-", exact=1)
-realNum = Combine(Optional(arithSign) +
-                  (Word(nums) + "." + Optional(Word(nums)) |
-                   ("." + Word(nums))) +
-                  Optional(E + Optional(arithSign) + Word(nums)))
-intNum = Combine(Optional(arithSign) + Word(nums) +
-                 Optional(E + Optional("+") + Word(nums)))
-
-# need to add support for alg expressions
-columnRval = realNum | intNum | quotedString | columnName
-whereCondition = Group(
-    (columnName + binop + columnRval) |
-    (columnName + in_ + "(" + delimitedList(columnRval) + ")") |
-    (columnName + in_ + "(" + selectStmt + ")") |
-    ("(" + whereExpression + ")")
-)
-whereExpression << whereCondition + ZeroOrMore((and_ | or_) + whereExpression)
-whereExpression = locatedExpr(whereExpression)
-# define the grammar
-selectList = Group(selectToken + locatedExpr('*' | columnNameList)).setResultsName("select")
-fromClause = Group(fromToken + locatedExpr(tableNameList)).setResultsName("from_")
-whereClause = Group(CaselessLiteral("where") +
-                   whereExpression).setResultsName("where")
-selectStmt << ( selectList + fromClause + Optional(whereClause, ""))
-
-simpleSQL = selectStmt
-
-# define Oracle comment format, and ignore them
-oracleSqlComment = "--" + restOfLine
-simpleSQL.ignore(oracleSqlComment)
-
-
-test("SELECT a, b, c from table1, table2       where mok = bok", 30)
-#test("select * from SYS.XYZZY")
-#test("Select A from Sys.dual")
-#test("Select A,B,C from Sys.dual")
-#test("Select A, B, C from Sys.dual")
-#test("Select A, B, C from Sys.dual, Table2   ")
-#test("Xelect A, B, C from Sys.dual")
-#test("Select A, B, C frox Sys.dual")
-# test("Select")
-#test("Select &&& frox Sys.dual")
-#test("Select A from Sys.dual where a in ('RED','GREEN','BLUE')")
-# test("Select A from Sys.dual where a in ('RED','GREEN','BLUE')" +
-#     " and b in (10,20,30)")
-# test("Select A,b from table1,table2 where table1.id eq table2.id" +
-#     " -- test out comparison operators")
-#test("SELECT a FROM (SELECT b) a")
+for test_str in test_strings:
+    test(test_str)

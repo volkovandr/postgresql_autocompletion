@@ -22,5 +22,5 @@ class genral_functionality(unittest.TestCase):
         v.set_text("SELECT a, b, c FROM tes")
         v.add_selection(Selection(24, 24))
         pa = postgresql_autocompletion(dbmocker_query_service())
-        ret = ps.on_query_completions(v, "tes", None)
+        ret = pa.on_query_completions(v, "tes", None)
         self.assertEqual(ret, "test_schema1")
