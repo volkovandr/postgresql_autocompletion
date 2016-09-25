@@ -11,14 +11,9 @@ except ImportError:
     sublime_plugin = sublime_plugin_mocker
 
 
-def checkSyntax(view):
+def checkSyntax(view, syntax):
     '''Checks if the file being edited is a PostgreSQL script'''
-    if view.settings().get('syntax') == \
-        ("Packages/PostgreSQL Syntax Highlighting" +
-         "PostgreSQL.tmLanguage"):
-        return True
-    else:
-        return False
+    return syntax in view.settings().get('syntax')
 
 
 def getQueryText(view):
@@ -57,13 +52,14 @@ def getSetting(view, setting_name):
 def getSettings(view):
     '''Returns all the settings as dictionary.
     The missing settings will get their default values.
-    The new settings that will be found in the settings file are ignored'''
+    The new settings that could be found in the settings file are ignored'''
     settings = {
         "postgresql_autocompletion_db_host": "localhost",
         "postgresql_autocompletion_db_port": "5432",
         "postgresql_autocompletion_db_name": "postgres",
         "postgresql_autocompletion_db_user": "user",
-        "postgresql_autocompletion_db_password": "password"}
+        "postgresql_autocompletion_db_password": "password",
+        "postgresql_autocompletion_syntax": "PostgreSQL"}
     for setting_key in settings:
         setting_value = getSetting(view, setting_key)
         if setting_value is not None:

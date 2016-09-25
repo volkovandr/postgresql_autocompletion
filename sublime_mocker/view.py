@@ -12,8 +12,8 @@ class View():
             self,
             settings_map={
                 'syntax':
-                    'Packages/PostgreSQL Syntax Highlighting/\
-                    PostgreSQL.tmLanguage'
+                    'Packages/PostgreSQL Syntax Highlighting/' + \
+                    'PostgreSQL.tmLanguage'
             }
     ):
         self._settings = settings.Settings(settings_map)

@@ -101,3 +101,13 @@ class basic_parser_tests(unittest.TestCase):
         cursor_position_info = sqlparser.cursorPositionInQuery(
             25, parse_results)
         self.assertEqual(cursor_position_info, ("from", "table", 4))
+
+    def testCursorPositionInQueryOut(self):
+        '''CursorPositionInQuery returns None when cursor is not in any element'''
+        parse_results = {
+            "select": ("a, b, c", 8, 15),
+            "from": ("table", 21, 26)}
+        cursor_position_info = sqlparser.cursorPositionInQuery(
+            100, parse_results)
+        self.assertIsNone(cursor_position_info)
+

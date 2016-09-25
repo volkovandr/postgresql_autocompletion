@@ -1,1 +1,1 @@
-from .commands import *
+from plugin_test.commands import *

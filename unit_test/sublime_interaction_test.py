@@ -13,9 +13,9 @@ class sublime_interaction(unittest.TestCase):
         '''CheckSyntax works'''
         v = view.View({'syntax': 'Packages/PostgreSQL Syntax Highlighting' +
                        'PostgreSQL.tmLanguage'})
-        self.assertEqual(checkSyntax(v), True)
+        self.assertEqual(checkSyntax(v, "PostgreSQL"), True)
         v = view.View({'syntax': 'something else'})
-        self.assertEqual(checkSyntax(v), False)
+        self.assertEqual(checkSyntax(v, "PostgreSQL"), False)
 
     def testGetQueryText(self):
         '''getQueryText works'''
@@ -38,7 +38,8 @@ class sublime_interaction(unittest.TestCase):
             "postgresql_autocompletion_db_port": "5432",
             "postgresql_autocompletion_db_name": "test",
             "postgresql_autocompletion_db_user": "test",
-            "postgresql_autocompletion_db_password": "password"}
+            "postgresql_autocompletion_db_password": "password",
+            "postgresql_autocompletion_syntax": "PostgreSQL"}
         v = view.View()
         settings = getSettings(v)
         self.assertEqual(settings, default_settings)

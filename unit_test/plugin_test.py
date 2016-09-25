@@ -19,8 +19,8 @@ class genral_functionality(unittest.TestCase):
     def testCursorAtSchemaName(self):
         '''Returns schema names when cursor stands in the name of a schema'''
         v = View()
-        v.set_text("SELECT a, b, c FROM tes")
+        v.set_text("SELECT a, b, c FROM tes.table1")
         v.add_selection(Selection(24, 24))
         pa = postgresql_autocompletion(dbmocker_query_service())
         ret = pa.on_query_completions(v, "tes", None)
-        self.assertEqual(ret, "test_schema1")
+        self.assertEqual(ret, ["public", "test_schema1"])

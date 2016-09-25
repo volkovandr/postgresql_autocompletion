@@ -18,7 +18,7 @@
 	"settings":
 	{
 		"anaconda_linting": true,
-		"anaconda_linting_behaviour": "always",
+		"anaconda_linting_behaviour": "save",
 		"auto_complete": false,
 		"pep257": false,
 		"python_interpreter": "python",
@@ -32,7 +32,7 @@
 		"test_delimeter": ".",
 		"translate_tabs_to_spaces": true,
 		"trim_trailing_white_space_on_save": true,
-		"use_pylint": false,
+		"use_pylint": true,
 		"validate_imports": true,
 		"word_wrap": true
 	}

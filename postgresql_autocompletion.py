@@ -12,7 +12,7 @@ except ImportError:
 from postgresql_autocompletion_lib.postgresql_query_service \
     import postgresql_query_service
 from postgresql_autocompletion_lib.helpers \
-    import checkSyntax, getQueryText
+    import checkSyntax, getQueryText, getSettings
 from postgresql_autocompletion_lib.sqlparser import base_parse, \
     cursorPositionInQuery, parseFrom
 
@@ -26,15 +26,25 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
 
     def on_query_completions(self, view, prefix, locations):
         # Do nothing when it is not PostgreSQL script file
-        if not checkSyntax(view):
+        self.settings = getSettings(view)
+        if not checkSyntax(view, self.settings["postgresql_autocompletion_syntax"]):
             return []
         query_text, cursor_pos = getQueryText(view)
-        base_parse_results = base_parse(query_text)
-        sql_block = cursorPositionInQuery(cursor_pos, base_parse_results)
-        if sql_block[0] == "from":
-            from_parse_results = parseFrom(sql_block[1])
-            from_block = cursorPositionInQuery(sql_block[2], from_parse_results)
-            if from_block[0] == "schema_name":
-                schemas = db_query_service.getSchemas()
-                return schemas
+        self.base_parse_results = base_parse(query_text)
+        self.sql_block_at_cursor = cursorPositionInQuery(
+            cursor_pos,
+            self.base_parse_results)
+        if self.sql_block_at_cursor[0] == "from":
+            return self.process_from_clause()
+
+    def process_from_clause(self):
+        from_parse_results = parseFrom(self.sql_block_at_cursor[1])
+        for from_element in from_parse_results:
+            from_block = cursorPositionInQuery(
+                self.sql_block_at_cursor[2],
+                from_element)
+            if from_block:
+                if from_block[0] == "schema_name":
+                    schemas = self.db_query_service.getSchemas()
+                    return schemas
 
