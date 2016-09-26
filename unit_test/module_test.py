@@ -43,7 +43,16 @@ class import_lib(unittest.TestCase):
         import postgresql_autocompletion_lib
         self.assertIsNotNone(postgresql_autocompletion_lib)
 
+
+class import_postgresql_query_service(unittest.TestCase):
+    '''Test that the postgresql libraries can be imported'''
+
     def testCanImportPostgresqlQueryService(self):
-        from postgresql_autocompletion_lib.postgresql_query_service \
-            import postgresql_query_service
+        import postgresql_query_service
         self.assertIsNotNone(postgresql_query_service)
+
+    def testCanCreatePostgresqlQueryServiceInstance(self):
+        from postgresql_query_service.postgresql_query_service \
+            import postgresql_query_service
+        instance = postgresql_query_service()
+        self.assertIsNotNone(instance)
