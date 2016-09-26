@@ -9,7 +9,7 @@ except ImportError:
     sublime = sublime_mocker
     sublime_plugin = sublime_plugin_mocker
 
-from postgresql_autocompletion_lib.postgresql_query_service \
+from postgresql_query_service.postgresql_query_service \
     import postgresql_query_service
 from postgresql_autocompletion_lib.helpers \
     import checkSyntax, getQueryText, getSettings
