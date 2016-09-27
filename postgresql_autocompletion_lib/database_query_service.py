@@ -3,7 +3,7 @@ to connect to a database and to query the database schema'''
 
 
 class database_query_service:
-    def connect(self, host, port, database, user, passsword):
+    def connect(self, host, port, database, user, password):
         raise NotImplementedError()
 
     def getSchemas(self):

@@ -144,7 +144,7 @@ class Void(Message):
 
 	def serialize(self):
 		return b''
-	
+
 	def __new__(typ, *args, **kw):
 		return VoidMessage
 VoidMessage = Message.__new__(Void)
@@ -547,7 +547,7 @@ class Startup(Message, dict):
 	Initiate a connection using the given keywords.
 	"""
 	type = b''
-	from postgresql.protocol.version import V3_0 as version
+	from ...postgresql.protocol.version import V3_0 as version
 	packed_version = version.bytes()
 	__slots__ = ()
 	__repr__ = dict_message_repr
