@@ -30,3 +30,12 @@ class postgresql_query_service(database_query_service):
                 SELECT schema_name
                     FROM information_schema.schemata
                     ORDER BY schema_name''')]
+
+    def isConnected(self):
+        if not self.connection:
+            return False
+        try:
+            self.connection.query("SELECT 1")
+            return True
+        except:
+            return False

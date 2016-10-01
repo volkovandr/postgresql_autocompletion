@@ -67,3 +67,13 @@ class postgresql_query_service_test(unittest.TestCase):
             'public',
             'test_schema'], schemas)
 
+    def testIsConnected(self):
+        query_service = postgresql_query_service()
+        query_service.connect(
+            host='localhost',
+            port='5432',
+            database='test_database',
+            user='test_user',
+            password='test_password')
+        self.assertTrue(query_service.isConnected())
+
