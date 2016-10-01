@@ -1,6 +1,10 @@
 '''Implementation of an SQL parser used by the plugin'''
 
-from postgresql_autocompletion_lib.pyparsing import *
+if __package__ == 'postgresql_autocompletion_lib':
+    from postgresql_autocompletion_lib.pyparsing import *
+else:
+    from ..postgresql_autocompletion_lib.pyparsing import *
+
 
 
 def addToDict(dict_, key, token):

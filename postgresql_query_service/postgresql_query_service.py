@@ -1,6 +1,11 @@
-from postgresql_query_service import postgresql
-from postgresql_autocompletion_lib.database_query_service \
-    import database_query_service
+if __package__ == 'postgresql_query_service':
+    from postgresql_query_service import postgresql
+    from postgresql_autocompletion_lib.database_query_service \
+        import database_query_service
+else:
+    from ..postgresql_query_service import postgresql
+    from ..postgresql_autocompletion_lib.database_query_service \
+        import database_query_service
 
 
 class postgresql_query_service(database_query_service):
