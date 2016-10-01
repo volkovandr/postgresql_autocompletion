@@ -5,6 +5,9 @@ from postgresql_autocompletion_lib.database_query_service \
 
 class postgresql_query_service(database_query_service):
 
+    def __init__(self):
+        self.connection = None
+
     def connect(self, host, port, database, user, password):
         self.connection = postgresql.open(
             user=user,
@@ -14,4 +17,11 @@ class postgresql_query_service(database_query_service):
             password=password)
 
     def getSchemas(self):
-        raise NotImplementedError()
+        if self.connection is None:
+            raise Exception("Not connected to the database")
+        return [
+            row[0] for row in
+            self.connection.query('''
+                SELECT schema_name
+                    FROM information_schema.schemata
+                    ORDER BY schema_name''')]
