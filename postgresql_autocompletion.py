@@ -9,12 +9,20 @@ except ImportError:
     sublime = sublime_mocker
     sublime_plugin = sublime_plugin_mocker
 
-from postgresql_query_service.postgresql_query_service \
-    import postgresql_query_service
-from postgresql_autocompletion_lib.helpers \
-    import checkSyntax, getQueryText, getSettings
-from postgresql_autocompletion_lib.sqlparser import base_parse, \
-    cursorPositionInQuery, parseFrom
+if __package__:
+    from .postgresql_query_service.postgresql_query_service \
+        import postgresql_query_service
+    from .postgresql_autocompletion_lib.helpers \
+        import checkSyntax, getQueryText, getSettings
+    from .postgresql_autocompletion_lib.sqlparser import base_parse, \
+        cursorPositionInQuery, parseFrom
+else:
+    from postgresql_query_service.postgresql_query_service \
+        import postgresql_query_service
+    from postgresql_autocompletion_lib.helpers \
+        import checkSyntax, getQueryText, getSettings
+    from postgresql_autocompletion_lib.sqlparser import base_parse, \
+        cursorPositionInQuery, parseFrom
 
 
 class postgresql_autocompletion(sublime_plugin.EventListener):
