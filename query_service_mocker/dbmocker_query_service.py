@@ -8,8 +8,19 @@ from postgresql_autocompletion_lib.database_query_service \
 
 class dbmocker_query_service(database_query_service):
 
-    def connect(self, host, port, database, user, passsword):
+    def __init__(self):
+        self.connected = False
+
+    def connect(self, host, port, database, user, password):
+        self.connected = True
         pass
 
     def getSchemas(self):
-        return ["public", "test_schema1"]
+        return [
+            "public",
+            "test_schema",
+            "pg_catalog",
+            "information_schema"].sort()
+
+    def isConnected(self):
+        return self.connected

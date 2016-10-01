@@ -16,10 +16,17 @@ class dbmocker(unittest.TestCase):
         '''Can connect to the database'''
         dbmocker = dbmocker_query_service()
         dbmocker.connect("host", "port", "database", "user", "password")
+        self.assertEqual(True, dbmocker.isConnected())
 
     def testGetSchemas(self):
         '''getSchemas returns the test schemas'''
         dbmocker = dbmocker_query_service()
         dbmocker.connect("host", "port", "database", "user", "password")
         schemas = dbmocker.getSchemas()
-        self.assertEqual(schemas, ["public", "test_schema1"])
+        self.assertEqual(
+            schemas,
+            [
+                "public",
+                "test_schema",
+                "pg_catalog",
+                "information_schema"].sort())

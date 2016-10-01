@@ -23,4 +23,20 @@ class genral_functionality(unittest.TestCase):
         v.add_selection(Selection(24, 24))
         pa = postgresql_autocompletion(dbmocker_query_service())
         ret = pa.on_query_completions(v, "tes", None)
-        self.assertEqual(ret, ["public", "test_schema1"])
+        self.assertEqual(
+            ret,
+            [
+                "public",
+                "test_schema",
+                "pg_catalog",
+                "information_schema"].sort())
+
+    def testConnectsToDatabase(self):
+        '''The plugin does connect to the database'''
+        v = View()
+        v.set_text("SELECT a, b, c FROM test_schema.table1")
+        v.add_selection(Selection(24, 24))
+        query_service = dbmocker_query_service()
+        pa = postgresql_autocompletion(query_service)
+        pa.on_query_completions(v, "tes", None)
+        self.assertTrue(query_service.isConnected())

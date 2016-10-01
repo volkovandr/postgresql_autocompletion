@@ -29,6 +29,8 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
         self.settings = getSettings(view)
         if not checkSyntax(view, self.settings["postgresql_autocompletion_syntax"]):
             return []
+        if not self.db_query_service.isConnected():
+            self.dbConnect()
         query_text, cursor_pos = getQueryText(view)
         self.base_parse_results = base_parse(query_text)
         self.sql_block_at_cursor = cursorPositionInQuery(
@@ -48,3 +50,10 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
                     schemas = self.db_query_service.getSchemas()
                     return schemas
 
+    def dbConnect(self):
+        self.db_query_service.connect(
+            host=self.settings["postgresql_autocompletion_db_host"],
+            port=self.settings["postgresql_autocompletion_db_port"],
+            database=self.settings["postgresql_autocompletion_db_name"],
+            user=self.settings["postgresql_autocompletion_db_user"],
+            password=self.settings["postgresql_autocompletion_db_password"])

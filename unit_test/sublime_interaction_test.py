@@ -36,9 +36,9 @@ class sublime_interaction(unittest.TestCase):
         default_settings = {
             "postgresql_autocompletion_db_host": "localhost",
             "postgresql_autocompletion_db_port": "5432",
-            "postgresql_autocompletion_db_name": "test",
-            "postgresql_autocompletion_db_user": "test",
-            "postgresql_autocompletion_db_password": "password",
+            "postgresql_autocompletion_db_name": "test_database",
+            "postgresql_autocompletion_db_user": "test_user",
+            "postgresql_autocompletion_db_password": "test_password",
             "postgresql_autocompletion_syntax": "PostgreSQL"}
         v = view.View()
         settings = getSettings(v)
