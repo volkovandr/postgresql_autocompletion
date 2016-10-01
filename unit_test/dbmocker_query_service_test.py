@@ -26,7 +26,7 @@ class dbmocker(unittest.TestCase):
         self.assertEqual(
             schemas,
             [
-                "public",
-                "test_schema",
+                "information_schema",
                 "pg_catalog",
-                "information_schema"].sort())
+                "public",
+                "test_schema"])

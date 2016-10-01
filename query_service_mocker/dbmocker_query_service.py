@@ -17,10 +17,10 @@ class dbmocker_query_service(database_query_service):
 
     def getSchemas(self):
         return [
-            "public",
-            "test_schema",
+            "information_schema",
             "pg_catalog",
-            "information_schema"].sort()
+            "public",
+            "test_schema"]
 
     def isConnected(self):
         return self.connected

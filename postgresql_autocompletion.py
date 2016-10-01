@@ -35,7 +35,9 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
     def on_query_completions(self, view, prefix, locations):
         # Do nothing when it is not PostgreSQL script file
         self.settings = getSettings(view)
-        if not checkSyntax(view, self.settings["postgresql_autocompletion_syntax"]):
+        if not checkSyntax(
+                view,
+                self.settings["postgresql_autocompletion_syntax"]):
             return []
         if not self.db_query_service.isConnected():
             self.dbConnect()
@@ -56,7 +58,10 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
             if from_block:
                 if from_block[0] == "schema_name":
                     schemas = self.db_query_service.getSchemas()
-                    return schemas
+                    if schemas:
+                        return [
+                            [schema_name + "\t" + "schema", schema_name]
+                            for schema_name in schemas]
 
     def dbConnect(self):
         self.db_query_service.connect(

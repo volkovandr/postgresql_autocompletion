@@ -26,10 +26,10 @@ class genral_functionality(unittest.TestCase):
         self.assertEqual(
             ret,
             [
-                "public",
-                "test_schema",
-                "pg_catalog",
-                "information_schema"].sort())
+                ["information_schema\tschema", "information_schema"],
+                ["pg_catalog\tschema", "pg_catalog"],
+                ["public\tschema", "public"],
+                ["test_schema\tschema", "test_schema"]])
 
     def testConnectsToDatabase(self):
         '''The plugin does connect to the database'''
