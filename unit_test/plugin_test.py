@@ -29,7 +29,8 @@ class genral_functionality(unittest.TestCase):
                 ["information_schema\tschema", "information_schema"],
                 ["pg_catalog\tschema", "pg_catalog"],
                 ["public\tschema", "public"],
-                ["test_schema\tschema", "test_schema"]])
+                ["test_schema\tschema", "test_schema"],
+                ["test_schema2\tschema", "test_schema2"]])
 
     def testConnectsToDatabase(self):
         '''The plugin does connect to the database'''

@@ -49,6 +49,8 @@ class postgresql_query_service_test(unittest.TestCase):
         query_service.connection.execute('''
             DROP SCHEMA IF EXISTS test_schema CASCADE;
             CREATE SCHEMA test_schema;
+            DROP SCHEMA IF EXISTS test_schema2 CASCADE;
+            CREATE SCHEMA test_schema2;
             ''')
 
     def testGetSchemas(self):
@@ -65,7 +67,8 @@ class postgresql_query_service_test(unittest.TestCase):
             'information_schema',
             'pg_catalog',
             'public',
-            'test_schema'], schemas)
+            'test_schema',
+            'test_schema2'], schemas)
 
     def testIsConnected(self):
         query_service = postgresql_query_service()

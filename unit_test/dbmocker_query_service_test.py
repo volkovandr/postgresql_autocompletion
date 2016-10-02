@@ -29,4 +29,5 @@ class dbmocker(unittest.TestCase):
                 "information_schema",
                 "pg_catalog",
                 "public",
-                "test_schema"])
+                "test_schema",
+                "test_schema2"])

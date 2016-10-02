@@ -20,7 +20,8 @@ class dbmocker_query_service(database_query_service):
             "information_schema",
             "pg_catalog",
             "public",
-            "test_schema"]
+            "test_schema",
+            "test_schema2"]
 
     def isConnected(self):
         return self.connected
