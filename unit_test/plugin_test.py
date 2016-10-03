@@ -27,6 +27,28 @@ class genral_functionality(unittest.TestCase):
         self.assertTrue(query_service.isConnected())
 
 
+class corner_cases(unittest.TestCase):
+
+    def testEmptyFromList(self):
+        '''The plugin returns tables and schemas when the cursor is just after
+        the keyword FROM '''
+        v = View()
+        v.set_text("SELECT a, b, c FROM ")
+        v.add_selection(Selection(20, 20))
+        pa = postgresql_autocompletion(dbmocker_query_service())
+        ret = pa.on_query_completions(v, "", None)
+        self.assertEqual(
+            ret,
+            [
+                ["information_schema\tschema", "information_schema"],
+                ["pg_catalog\tschema", "pg_catalog"],
+                ["public\tschema", "public"],
+                ["test_schema\tschema", "test_schema"],
+                ["test_schema2\tschema", "test_schema2"],
+                ["test1_public\ttable in public", "test1_public"],
+                ["test2_public\ttable in public", "test2_public"]])
+
+
 class test_autocompletion(unittest.TestCase):
 
     def testCursorAtSchemaName(self):

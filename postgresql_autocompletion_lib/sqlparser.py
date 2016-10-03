@@ -2,6 +2,8 @@
 
 if __package__ == 'postgresql_autocompletion_lib':
     from postgresql_autocompletion_lib.pyparsing import *
+elif __package__ is None:
+    from pyparsing import *
 else:
     from ..postgresql_autocompletion_lib.pyparsing import *
 
@@ -130,4 +132,3 @@ def parseFrom(from_clause_text):
         ret.append(parse_result)
 
     return ret
-

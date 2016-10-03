@@ -14,4 +14,5 @@ class PluginTestCommand1(sublime_plugin.TextCommand):
         print("Sublime's setting Zorro is ", s2)
         syntax = self.view.settings().get("syntax")
         print(syntax)
+        print("Selection begin:", self.view.sel()[0].begin())
 

@@ -46,36 +46,44 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
         self.sql_block_at_cursor = cursorPositionInQuery(
             cursor_pos,
             self.base_parse_results)
+        self.result = []
         if self.sql_block_at_cursor[0] == "from":
-            return self.process_from_clause()
+            self.process_from_clause()
+        return self.result
 
     def process_from_clause(self):
+        if self.sql_block_at_cursor[1] == '':
+            self.addSchemasToResult()
+            self.addTablesToResult()
+            return
         from_parse_results = parseFrom(self.sql_block_at_cursor[1])
         for from_element in from_parse_results:
             from_block = cursorPositionInQuery(
                 self.sql_block_at_cursor[2],
                 from_element)
             if from_block:
-                if from_block[0] == "schema_name":
-                    schemas = self.db_query_service.getSchemas()
-                    if schemas:
-                        return [
-                            [schema_name + "\t" + "schema", schema_name]
-                            for schema_name in schemas]
-                elif from_block[0] == "schema_or_table_name":
-                    schemas = self.db_query_service.getSchemas()
-                    tables = self.db_query_service.getTables()
-                    result = []
-                    if schemas:
-                        result += [
-                            [schema_name + "\t" + "schema", schema_name]
-                            for schema_name in schemas]
-                    if tables:
-                        result += [
-                            [table_name + "\t" + "table in " + schema_name,
-                             table_name]
-                            for (table_name, schema_name) in tables]
-                    return result
+                if from_block[0] in ["schema_name"]:
+                    self.addSchemasToResult()
+                    return
+                if from_block[0] == "schema_or_table_name":
+                    self.addSchemasToResult()
+                    self.addTablesToResult()
+                    return
+
+    def addSchemasToResult(self):
+        schemas = self.db_query_service.getSchemas()
+        if schemas:
+            self.result += [
+                [schema_name + "\t" + "schema", schema_name]
+                for schema_name in schemas]
+
+    def addTablesToResult(self):
+        tables = self.db_query_service.getTables()
+        if tables:
+            self.result += [
+                [table_name + "\t" + "table in " + schema_name,
+                 table_name]
+                for (table_name, schema_name) in tables]
 
     def dbConnect(self):
         self.db_query_service.connect(

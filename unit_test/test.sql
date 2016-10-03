@@ -1,1 +1,1 @@
-SELECT a, b, c FROM test_schema2.table
+SELECT a, b, c FROM
