@@ -66,15 +66,15 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
                     self.addSchemasToResult()
                     return
                 if from_block[0] == "schema_or_table_name":
-                    self.addSchemasToResult()
+                    self.addSchemasToResult(with_dot=True)
                     self.addTablesToResult()
                     return
 
-    def addSchemasToResult(self):
+    def addSchemasToResult(self, with_dot=False):
         schemas = self.db_query_service.getSchemas()
         if schemas:
             self.result += [
-                [schema_name + "\t" + "schema", schema_name]
+                [schema_name + "\t" + "schema", schema_name + ("." if with_dot else "")]
                 for schema_name in schemas]
 
     def addTablesToResult(self):
