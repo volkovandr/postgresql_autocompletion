@@ -15,6 +15,9 @@ class dbmocker_query_service(database_query_service):
         self.connected = True
         pass
 
+    def isConnected(self):
+        return self.connected
+
     def getSchemas(self):
         return [
             "information_schema",
@@ -23,5 +26,5 @@ class dbmocker_query_service(database_query_service):
             "test_schema",
             "test_schema2"]
 
-    def isConnected(self):
-        return self.connected
+    def getTables(self):
+        return [("test1_public", "public"), ("test2_public", "public")]

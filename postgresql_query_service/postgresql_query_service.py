@@ -21,16 +21,6 @@ class postgresql_query_service(database_query_service):
             database=database,
             password=password)
 
-    def getSchemas(self):
-        if self.connection is None:
-            raise Exception("Not connected to the database")
-        return [
-            row[0] for row in
-            self.connection.query('''
-                SELECT schema_name
-                    FROM information_schema.schemata
-                    ORDER BY schema_name''')]
-
     def isConnected(self):
         if not self.connection:
             return False
@@ -39,3 +29,27 @@ class postgresql_query_service(database_query_service):
             return True
         except:
             return False
+
+    def getSchemas(self):
+        if not self.isConnected():
+            raise Exception("Not connected to the database")
+        return [
+            row[0] for row in
+            self.connection.query('''
+                SELECT schema_name
+                    FROM information_schema.schemata
+                    ORDER BY schema_name''')]
+
+    def getTables(self):
+        if not self.isConnected():
+            raise Exception("Not connected to the database")
+        return [
+            (row[0], row[1]) for row in
+            self.connection.query('''
+                SELECT table_name, table_schema
+                    FROM information_schema.tables
+                    WHERE table_schema = ANY (ARRAY(
+                        SELECT regexp_split_to_array(setting, ',\W')
+                            FROM pg_settings
+                            WHERE name = 'search_path'))
+                    ORDER BY table_name, table_schema''')]

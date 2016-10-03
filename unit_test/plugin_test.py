@@ -16,6 +16,19 @@ class genral_functionality(unittest.TestCase):
         ret = pa.on_query_completions(v, None, None)
         self.assertEqual(len(ret), 0)
 
+    def testConnectsToDatabase(self):
+        '''The plugin does connect to the database'''
+        v = View()
+        v.set_text("SELECT a, b, c FROM test_schema.table1")
+        v.add_selection(Selection(24, 24))
+        query_service = dbmocker_query_service()
+        pa = postgresql_autocompletion(query_service)
+        pa.on_query_completions(v, "tes", None)
+        self.assertTrue(query_service.isConnected())
+
+
+class test_autocompletion(unittest.TestCase):
+
     def testCursorAtSchemaName(self):
         '''Returns schema names when cursor stands in the name of a schema'''
         v = View()
@@ -32,12 +45,21 @@ class genral_functionality(unittest.TestCase):
                 ["test_schema\tschema", "test_schema"],
                 ["test_schema2\tschema", "test_schema2"]])
 
-    def testConnectsToDatabase(self):
-        '''The plugin does connect to the database'''
+    def testCursorAtSchemaOrTableName(self):
+        '''Returns schema and table names when cursor stands at a place
+        where it is not clear if that is a schema or table name'''
         v = View()
-        v.set_text("SELECT a, b, c FROM test_schema.table1")
-        v.add_selection(Selection(24, 24))
-        query_service = dbmocker_query_service()
-        pa = postgresql_autocompletion(query_service)
-        pa.on_query_completions(v, "tes", None)
-        self.assertTrue(query_service.isConnected())
+        v.set_text("SELECT a, b, c FROM tes")
+        v.add_selection(Selection(23, 23))
+        pa = postgresql_autocompletion(dbmocker_query_service())
+        ret = pa.on_query_completions(v, "tes", None)
+        self.assertEqual(
+            ret,
+            [
+                ["information_schema\tschema", "information_schema"],
+                ["pg_catalog\tschema", "pg_catalog"],
+                ["public\tschema", "public"],
+                ["test_schema\tschema", "test_schema"],
+                ["test_schema2\tschema", "test_schema2"],
+                ["test1_public\ttable in public", "test1_public"],
+                ["test2_public\ttable in public", "test2_public"]])

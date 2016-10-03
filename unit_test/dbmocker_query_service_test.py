@@ -31,3 +31,16 @@ class dbmocker(unittest.TestCase):
                 "public",
                 "test_schema",
                 "test_schema2"])
+
+    def testGetTablesPublic(self):
+        '''getTables returns the tables from public schema
+        if the schema is not set'''
+        dbmocker = dbmocker_query_service()
+        dbmocker.connect("host", "port", "database", "user", "password")
+        tables = dbmocker.getTables()
+        self.assertEqual(
+            tables,
+            [
+                ("test1_public", "public"),
+                ("test2_public", "public")])
+
