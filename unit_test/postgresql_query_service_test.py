@@ -48,13 +48,15 @@ class postgresql_query_service_test(unittest.TestCase):
             password='test_password')
         query_service.connection.execute('''
             DROP SCHEMA IF EXISTS test_schema CASCADE;
-            CREATE SCHEMA test_schema;
             DROP SCHEMA IF EXISTS test_schema2 CASCADE;
-            CREATE SCHEMA test_schema2;
             DROP TABLE IF EXISTS test1_public;
-            CREATE TABLE test1_public(a int);
             DROP TABLE IF EXISTS test2_public;
+            CREATE SCHEMA test_schema;
+            CREATE SCHEMA test_schema2;
+            CREATE TABLE test1_public(a int);
             CREATE TABLE test2_public(a int);
+            CREATE TABLE test_schema.table1_test1(a int);
+            CREATE TABLE test_schema.table2_test1(a int);
             ''')
 
     def testGetSchemas(self):
@@ -101,4 +103,19 @@ class postgresql_query_service_test(unittest.TestCase):
                 ("test1_public", "public"),
                 ("test2_public", "public")])
 
-
+    def testGetTablesTestSchema(self):
+        '''Returns tables from public when the schemaname not given'''
+        self.createTestSchema()
+        query_service = postgresql_query_service()
+        query_service.connect(
+            host='localhost',
+            port='5432',
+            database='test_database',
+            user='test_user',
+            password='test_password')
+        tables = query_service.getTables("test_schema")
+        self.assertEqual(
+            tables,
+            [
+                ("table1_test1", "test_schema"),
+                ("table2_test1", "test_schema")])

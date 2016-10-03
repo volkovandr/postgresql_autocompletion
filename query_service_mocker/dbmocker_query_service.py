@@ -26,5 +26,11 @@ class dbmocker_query_service(database_query_service):
             "test_schema",
             "test_schema2"]
 
-    def getTables(self):
-        return [("test1_public", "public"), ("test2_public", "public")]
+    def getTables(self, schema_name=None):
+        if schema_name is None:
+            return [("test1_public", "public"), ("test2_public", "public")]
+        if schema_name == "test_schema":
+            return [
+                ("table1_test1", "test_schema"),
+                ("table2_test1", "test_schema")]
+

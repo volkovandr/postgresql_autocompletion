@@ -40,16 +40,26 @@ class postgresql_query_service(database_query_service):
                     FROM information_schema.schemata
                     ORDER BY schema_name''')]
 
-    def getTables(self):
+    def getTables(self, schema_name=None):
         if not self.isConnected():
             raise Exception("Not connected to the database")
-        return [
-            (row[0], row[1]) for row in
-            self.connection.query('''
+        if schema_name is None:
+            sql = '''
                 SELECT table_name, table_schema
                     FROM information_schema.tables
                     WHERE table_schema = ANY (ARRAY(
                         SELECT regexp_split_to_array(setting, ',\W')
                             FROM pg_settings
                             WHERE name = 'search_path'))
-                    ORDER BY table_name, table_schema''')]
+                    ORDER BY table_name, table_schema'''
+        else:
+            sql = '''
+                SELECT table_name, table_schema
+                    FROM information_schema.tables
+                    WHERE table_schema::text = $1::text
+                    ORDER BY table_name, table_schema'''
+        return [
+            (row[0], row[1]) for row in
+            (
+                self.connection.query(sql) if schema_name is None
+                else self.connection.query(sql, schema_name))]
