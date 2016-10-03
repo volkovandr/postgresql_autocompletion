@@ -55,7 +55,7 @@ class test_autocompletion(unittest.TestCase):
         '''Returns schema names when cursor stands in the name of a schema'''
         v = View()
         v.set_text("SELECT a, b, c FROM tes.table1")
-        v.add_selection(Selection(24, 24))
+        v.add_selection(Selection(23, 23))
         pa = postgresql_autocompletion(dbmocker_query_service())
         ret = pa.on_query_completions(v, "tes", None)
         self.assertEqual(
@@ -89,8 +89,8 @@ class test_autocompletion(unittest.TestCase):
     def testCursorAtTableName(self):
         '''Returns name of the tables when cursor is in the table name'''
         v = View()
-        v.set_text("SELECT a, b, c FROM test_schema.ta")
-        v.add_selection(Selection(34, 34))
+        v.set_text("SELECT a, b, c FROM test_schema.t")
+        v.add_selection(Selection(33, 33))
         pa = postgresql_autocompletion(dbmocker_query_service())
         ret = pa.on_query_completions(v, "ta", None)
         self.assertEqual(

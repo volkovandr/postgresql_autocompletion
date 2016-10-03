@@ -1,1 +1,1 @@
-SELECT a, b, c FROM
+SELECT a, b, c FROM public.t

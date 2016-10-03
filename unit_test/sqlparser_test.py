@@ -15,75 +15,75 @@ class basic_parser_tests(unittest.TestCase):
         '''base_parse returns positions of the main elements of the query'''
         query_text = "SELECT a, b, c FROM table"
         parsed = sqlparser.base_parse(query_text)
-        self.assertEqual(parsed["select"], ("a, b, c", 8, 15))
-        self.assertEqual(parsed["from"], ("table", 21, 26))
+        self.assertEqual(parsed["select"], ("a, b, c", 7, 14))
+        self.assertEqual(parsed["from"], ("table", 20, 25))
 
     def testParseFrom(self):
         '''parseFrom works'''
         test_cases = [
             ("", []),
-            ("table1", [{"schema_or_table_name": ("table1", 1, 7)}]),
-            ("table1 as t1", [{"table_name": ("table1", 1, 7),
-                               "alias": ("t1", 11, 13)}]),
-            ("table1 t1", [{"table_name": ("table1", 1, 7),
-                            "alias": ("t1", 8, 10)}]),
-            ("schema_1.table1 as t1", [{"schema_name": ("schema_1", 1, 9),
-                                        "table_name": ("table1", 10, 16),
-                                        "alias": ("t1", 20, 22)}]),
-            ("schema1.table1 t1", [{"schema_name": ("schema1", 1, 8),
-                                    "table_name": ("table1", 9, 15),
-                                    "alias": ("t1", 16, 18)}]),
-            ("schema1.table1", [{"schema_name": ("schema1", 1, 8),
-                                 "table_name": ("table1", 9, 15)}]),
+            ("table1", [{"schema_or_table_name": ("table1", 0, 6)}]),
+            ("table1 as t1", [{"table_name": ("table1", 0, 6),
+                               "alias": ("t1", 10, 12)}]),
+            ("table1 t1", [{"table_name": ("table1", 0, 6),
+                            "alias": ("t1", 7, 9)}]),
+            ("schema_1.table1 as t1", [{"schema_name": ("schema_1", 0, 8),
+                                        "table_name": ("table1", 9, 15),
+                                        "alias": ("t1", 19, 21)}]),
+            ("schema1.table1 t1", [{"schema_name": ("schema1", 0, 7),
+                                    "table_name": ("table1", 8, 14),
+                                    "alias": ("t1", 15, 17)}]),
+            ("schema1.table1", [{"schema_name": ("schema1", 0, 7),
+                                 "table_name": ("table1", 8, 14)}]),
             ("table1, table2", [
-                {"schema_or_table_name": ("table1", 1, 7)},
-                {"schema_or_table_name": ("table2", 9, 15)}]),
+                {"schema_or_table_name": ("table1", 0, 6)},
+                {"schema_or_table_name": ("table2", 8, 14)}]),
             ("table1 as t1, table2 as t2", [
-                {"table_name": ("table1", 1, 7), "alias": ("t1", 11, 13)},
-                {"table_name": ("table2", 15, 21), "alias": ("t2", 25, 27)}]),
+                {"table_name": ("table1", 0, 6), "alias": ("t1", 10, 12)},
+                {"table_name": ("table2", 14, 20), "alias": ("t2", 24, 26)}]),
             ("table1, schema2.table2 t2", [
-                {"schema_or_table_name": ("table1", 1, 7)},
+                {"schema_or_table_name": ("table1", 0, 6)},
                 {
-                    "schema_name": ("schema2", 9, 16),
-                    "table_name": ("table2", 17, 23),
-                    "alias": ("t2", 24, 26)}]),
+                    "schema_name": ("schema2", 8, 15),
+                    "table_name": ("table2", 16, 22),
+                    "alias": ("t2", 23, 25)}]),
             ("schema1.table1 t1, schema2.table2 as t2", [
                 {
-                    "schema_name": ("schema1", 1, 8),
-                    "table_name": ("table1", 9, 15),
-                    "alias": ("t1", 16, 18)},
+                    "schema_name": ("schema1", 0, 7),
+                    "table_name": ("table1", 8, 14),
+                    "alias": ("t1", 15, 17)},
                 {
-                    "schema_name": ("schema2", 20, 27),
-                    "table_name": ("table2", 28, 34),
-                    "alias": ("t2", 38, 40)}]),
+                    "schema_name": ("schema2", 19, 26),
+                    "table_name": ("table2", 27, 33),
+                    "alias": ("t2", 37, 39)}]),
             ("s1.t1, s2.t2, s3.t3, s4.t4", [
-                {"schema_name": ("s1", 1, 3), "table_name": ("t1", 4, 6)},
-                {"schema_name": ("s2", 8, 10), "table_name": ("t2", 11, 13)},
-                {"schema_name": ("s3", 15, 17), "table_name": ("t3", 18, 20)},
-                {"schema_name": ("s4", 22, 24), "table_name": ("t4", 25, 27)}]),
+                {"schema_name": ("s1", 0, 2), "table_name": ("t1", 3, 5)},
+                {"schema_name": ("s2", 7, 9), "table_name": ("t2", 10, 12)},
+                {"schema_name": ("s3", 14, 16), "table_name": ("t3", 17, 19)},
+                {"schema_name": ("s4", 21, 23), "table_name": ("t4", 24, 26)}]),
             ("bla1 bla2 bla3 bla4", []),
             ('''schema1.table1
             as zorro  ,
             schema2.table2
             mumba''', [
                 {
-                    "schema_name": ("schema1", 1, 8),
-                    "table_name": ("table1", 9, 15),
-                    "alias": ("zorro", 31, 36)},
+                    "schema_name": ("schema1", 0, 7),
+                    "table_name": ("table1", 8, 14),
+                    "alias": ("zorro", 30, 35)},
                 {
-                    "schema_name": ("schema2", 52, 59),
-                    "table_name": ("table2", 60, 66),
-                    "alias": ("mumba", 79, 84)}]),
+                    "schema_name": ("schema2", 51, 58),
+                    "table_name": ("table2", 59, 65),
+                    "alias": ("mumba", 78, 83)}]),
             ("bla.bla, zok.mok, a b c, kum.zum", [
                 {
-                    "schema_name": ("bla", 1, 4),
-                    "table_name": ("bla", 5, 8)},
+                    "schema_name": ("bla", 0, 3),
+                    "table_name": ("bla", 4, 7)},
                 {
-                    "schema_name": ("zok", 10, 13),
-                    "table_name": ("mok", 14, 17)},
+                    "schema_name": ("zok", 9, 12),
+                    "table_name": ("mok", 13, 16)},
                 {
-                    "schema_name": ("kum", 26, 29),
-                    "table_name": ("zum", 30, 33)}])]
+                    "schema_name": ("kum", 25, 28),
+                    "table_name": ("zum", 29, 32)}])]
         for test_case in test_cases:
             from_clause_text = test_case[0]
             from_clause_parsed = sqlparser.parseFrom(from_clause_text)

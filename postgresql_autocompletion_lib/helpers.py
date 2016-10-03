@@ -32,10 +32,13 @@ def getQueryText(view):
             break
         end += 1
     query_text = \
-        view.substr(view.word(sublime.Region(beg, end)))
-    return (query_text.strip(), view.sel()[0].begin() -
-            view.word(sublime.Region(beg, end)).begin() -
-            (len(query_text) - len(query_text.lstrip())))
+        view.substr(view.word(sublime.Region(beg, end))).strip()
+    cursor_pos = view.sel()[0].begin() - \
+        view.word(sublime.Region(beg, end)).begin() - \
+        (len(query_text) - len(query_text.lstrip()))
+    if cursor_pos > len(query_text):
+        cursor_pos = len(query_text)
+    return (query_text, cursor_pos)
 
 
 def getSetting(view, setting_name):

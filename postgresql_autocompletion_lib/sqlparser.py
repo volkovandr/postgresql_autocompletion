@@ -11,7 +11,7 @@ else:
 
 def addToDict(dict_, key, token):
     if token and token != '':
-        dict_[key] = (token[1], token[0] + 1, token[2] + 1)
+        dict_[key] = (token[1], token[0], token[2])
 
 
 def cursorPositionInQuery(cursor_position, parse_results):
@@ -101,7 +101,7 @@ def parseFrom(from_clause_text):
     if from_clause_text is None or from_clause_text == '':
         return ret
 
-    identifier = Word(alphas, alphanums + "_").setName("identifier")
+    identifier = Word(alphas + "_", alphanums + "_").setName("identifier")
     as_keyword = Keyword("as", caseless=True).setName("AS")
 
     schemaname = locatedExpr(identifier).setResultsName("schemaname")
