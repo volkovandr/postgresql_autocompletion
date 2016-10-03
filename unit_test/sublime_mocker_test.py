@@ -52,15 +52,15 @@ class sublime_mocker(unittest.TestCase):
         '''Can get several characters from the text'''
         view = sublime.view.View()
         view.set_text("Some text")
-        self.assertEqual(view.substr(sublime.region.Region(4, 6)), "e t")
-        self.assertEqual(view.substr(sublime.region.Region(1, 6)), "Some t")
-        self.assertEqual(view.substr(sublime.region.Region(1, 9)), "Some text")
+        self.assertEqual(view.substr(sublime.region.Region(3, 6)), "e t")
+        self.assertEqual(view.substr(sublime.region.Region(0, 6)), "Some t")
+        self.assertEqual(view.substr(sublime.region.Region(0, 9)), "Some text")
 
     def testWord(self):
         '''Can extract a word(s) from a text'''
         view = sublime.view.View()
         view.set_text("Some text about Zorro")
-        reg = view.word(sublime.region.Region(4, 6))
+        reg = view.word(sublime.region.Region(3, 6))
         self.assertEqual(view.substr(reg), "Some text")
         reg = view.word(sublime.region.Region(13, 13))
         self.assertEqual(view.substr(reg), "about")
@@ -68,6 +68,8 @@ class sublime_mocker(unittest.TestCase):
         self.assertEqual(view.substr(reg), "Zorro")
         reg = view.word(sublime.region.Region(1, 1))
         self.assertEqual(view.substr(reg), "Some")
+        self.assertEqual(view.word(sublime.region.Region(1, 1)),
+                         sublime.region.Region(0, 4))
 
     def testLoadSettings(self):
         '''Test default settings'''
@@ -75,3 +77,11 @@ class sublime_mocker(unittest.TestCase):
             "postgresql_autocompletion.sublime-settings")
         self.assertEqual(settings.get("postgresql_autocompletion_db_host"),
                          "localhost")
+
+    def testRegionEquals(self):
+        '''Test == operator wors for Region'''
+        reg1 = sublime.region.Region(1, 1)
+        reg2 = sublime.region.Region(1, 2)
+        reg3 = sublime.region.Region(1, 1)
+        self.assertNotEqual(reg1, reg2)
+        self.assertEqual(reg1, reg3)

@@ -35,7 +35,7 @@ class View():
         if type(position).__name__ == "int":
             return self._text[position]
         if type(position).__name__ == "Region":
-            return self._text[position.begin() - 1:position.end()]
+            return self._text[position.begin():position.end()]
 
     def size(self):
         return len(self._text)
@@ -45,8 +45,8 @@ class View():
         beginning of a word, and ends at the end of a word.
         Note that it may span several words.'''
         beg = reg.a
-        while beg > 1:
-            if re.match('\W', self._text[beg-2]):
+        while beg > 0:
+            if re.match('\W', self._text[beg - 1]):
                 break
             beg -= 1
         end = reg.b

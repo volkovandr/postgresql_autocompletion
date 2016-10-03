@@ -3,8 +3,6 @@
 
 class Region():
     '''Represents Sublimes Region class'''
-    a = 0
-    b = 0
 
     def __init__(self, a=0, b=0):
         self.a = a
@@ -21,3 +19,19 @@ class Region():
             return self.b
         else:
             return self.a
+
+    def __eq__(self, other):
+        if self.a == other.a and \
+                self.b == other.b:
+            return True
+        return False
+
+    def __ne__(self, other):
+        if self.a != other.a:
+            return True
+        if self.b != other.b:
+            return True
+        return False
+
+    def __str__(self):
+        return str((self.a, self.b))
