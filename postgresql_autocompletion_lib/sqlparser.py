@@ -74,7 +74,7 @@ def base_parse(query_text):
 
 def parseFrom(from_clause_text):
     '''Parses the FROM clause.
-    Example: given string is schema1.table1 as t1, schema2.table2 as t2, t3
+    Example: given string is "schema1.table1 as t1, schema2.table2 as t2, t3"
     Returns list of dictionaries:
     [
         {

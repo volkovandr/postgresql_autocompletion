@@ -62,6 +62,20 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
                         return [
                             [schema_name + "\t" + "schema", schema_name]
                             for schema_name in schemas]
+                elif from_block[0] == "schema_or_table_name":
+                    schemas = self.db_query_service.getSchemas()
+                    tables = self.db_query_service.getTables()
+                    result = []
+                    if schemas:
+                        result += [
+                            [schema_name + "\t" + "schema", schema_name]
+                            for schema_name in schemas]
+                    if tables:
+                        result += [
+                            [table_name + "\t" + "table in " + schema_name,
+                             table_name]
+                            for (table_name, schema_name) in tables]
+                    return result
 
     def dbConnect(self):
         self.db_query_service.connect(
