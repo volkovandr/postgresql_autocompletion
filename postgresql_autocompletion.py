@@ -62,12 +62,15 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
                 self.sql_block_at_cursor[2],
                 from_element)
             if from_block:
-                if from_block[0] in ["schema_name"]:
+                if from_block[0] == "schema_name":
                     self.addSchemasToResult()
                     return
                 if from_block[0] == "schema_or_table_name":
                     self.addSchemasToResult(with_dot=True)
                     self.addTablesToResult()
+                    return
+                if from_block[0] == "table_name":
+                    self.addTablesToResult(from_element["schema_name"][0])
                     return
 
     def addSchemasToResult(self, with_dot=False):
@@ -79,8 +82,8 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
                     schema_name + ("." if with_dot else "")]
                 for schema_name in schemas]
 
-    def addTablesToResult(self):
-        tables = self.db_query_service.getTables()
+    def addTablesToResult(self, schema_name=None):
+        tables = self.db_query_service.getTables(schema_name)
         if tables:
             self.result += [
                 [table_name + "\t" + "table in " + schema_name,

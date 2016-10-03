@@ -101,7 +101,7 @@ def parseFrom(from_clause_text):
     if from_clause_text is None or from_clause_text == '':
         return ret
 
-    identifier = Word(alphas, alphanums).setName("identifier")
+    identifier = Word(alphas, alphanums + "_").setName("identifier")
     as_keyword = Keyword("as", caseless=True).setName("AS")
 
     schemaname = locatedExpr(identifier).setResultsName("schemaname")
