@@ -40,11 +40,11 @@ class corner_cases(unittest.TestCase):
         self.assertEqual(
             ret,
             [
-                ["information_schema\tschema", "information_schema"],
-                ["pg_catalog\tschema", "pg_catalog"],
-                ["public\tschema", "public"],
-                ["test_schema\tschema", "test_schema"],
-                ["test_schema2\tschema", "test_schema2"],
+                ["information_schema\tschema", "information_schema."],
+                ["pg_catalog\tschema", "pg_catalog."],
+                ["public\tschema", "public."],
+                ["test_schema\tschema", "test_schema."],
+                ["test_schema2\tschema", "test_schema2."],
                 ["test1_public\ttable in public", "test1_public"],
                 ["test2_public\ttable in public", "test2_public"]])
 

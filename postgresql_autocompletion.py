@@ -53,7 +53,7 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
 
     def process_from_clause(self):
         if self.sql_block_at_cursor[1] == '':
-            self.addSchemasToResult()
+            self.addSchemasToResult(with_dot=True)
             self.addTablesToResult()
             return
         from_parse_results = parseFrom(self.sql_block_at_cursor[1])
@@ -74,7 +74,9 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
         schemas = self.db_query_service.getSchemas()
         if schemas:
             self.result += [
-                [schema_name + "\t" + "schema", schema_name + ("." if with_dot else "")]
+                [
+                    schema_name + "\t" + "schema",
+                    schema_name + ("." if with_dot else "")]
                 for schema_name in schemas]
 
     def addTablesToResult(self):
