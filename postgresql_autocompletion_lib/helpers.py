@@ -35,7 +35,7 @@ def getQueryText(view):
         view.substr(view.word(sublime.Region(beg, end)))
     return (query_text.strip(), view.sel()[0].begin() -
             view.word(sublime.Region(beg, end)).begin() -
-            (len(query_text) - len(query_text.lstrip())) + 1)
+            (len(query_text) - len(query_text.lstrip())))
 
 
 def getSetting(view, setting_name):
