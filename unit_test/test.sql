@@ -1,1 +1,1 @@
-SELECT a, b, c FROM public.t
+SELECT a, b, c FROM test_schema.

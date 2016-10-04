@@ -83,12 +83,15 @@ class basic_parser_tests(unittest.TestCase):
                     "table_name": ("mok", 13, 16)},
                 {
                     "schema_name": ("kum", 25, 28),
-                    "table_name": ("zum", 29, 32)}])]
+                    "table_name": ("zum", 29, 32)}]),
+            ("test_schema.", [
+                {
+                    "schema_name": ("test_schema", 0, 11),
+                    "table_name": ("", 12, 12)}])]
         for test_case in test_cases:
             from_clause_text = test_case[0]
             from_clause_parsed = sqlparser.parseFrom(from_clause_text)
             self.assertEqual(test_case[1], from_clause_parsed)
-
 
     def testCursorPositionInQuery(self):
         '''Cursor position in query wokrs'''

@@ -106,17 +106,20 @@ def parseFrom(from_clause_text):
 
     schemaname = locatedExpr(identifier).setResultsName("schemaname")
     tablename = locatedExpr(identifier).setResultsName("tablename")
-    table_or_schemaname = \
-        locatedExpr(identifier).setResultsName("table_or_schemaname")
     alias = locatedExpr(identifier).setResultsName("alias")
 
     full_qualified_table_name = schemaname + "." + tablename + \
         Optional(as_keyword) + Optional(alias)
     unqualified_table_name = tablename + Optional(as_keyword) + alias
+    table_or_schemaname = \
+        locatedExpr(identifier).setResultsName("table_or_schemaname")
+    schema_name_and_dot = schemaname + "." + Optional(as_keyword) + \
+        Optional(alias)
 
     from_element = Suppress(StringStart() | ",") + \
         (
             full_qualified_table_name |
+            schema_name_and_dot.setResultsName("schemaname_and_dot") |
             unqualified_table_name |
             table_or_schemaname) + \
         (FollowedBy(",") | FollowedBy(StringEnd()))
@@ -125,7 +128,13 @@ def parseFrom(from_clause_text):
         tokens = parsed_from_element[0]
         parse_result = {}
         addToDict(parse_result, "schema_name", tokens.schemaname)
-        addToDict(parse_result, "table_name", tokens.tablename)
+        if tokens.schemaname_and_dot:
+            addToDict(
+                parse_result,
+                "table_name",
+                [tokens.schemaname[2] + 1, '', tokens.schemaname[2] + 1])
+        else:
+            addToDict(parse_result, "table_name", tokens.tablename)
         addToDict(parse_result, "alias", tokens.alias)
         addToDict(parse_result, "schema_or_table_name",
                   tokens.table_or_schemaname)
