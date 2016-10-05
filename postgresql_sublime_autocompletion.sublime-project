@@ -35,6 +35,7 @@
 		"trim_trailing_white_space_on_save": true,
 		"use_pylint": true,
 		"validate_imports": true,
-		"word_wrap": true
+		"word_wrap": true,
+	    "auto_complete_triggers": [ {"selector": "text, source, meta", "characters": "."} ]
 	}
 }

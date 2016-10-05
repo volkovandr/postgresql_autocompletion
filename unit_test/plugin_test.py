@@ -66,6 +66,23 @@ class corner_cases(unittest.TestCase):
                 ["test1_public\ttable in public", "test1_public"],
                 ["test2_public\ttable in public", "test2_public"]])
 
+    def testNotAQuery(self):
+        '''Plugin returns nothing when this is not a query at all'''
+        v = View()
+        v.set_text("This is not a query;")
+        v.add_selection(Selection(10, 10))
+        pa = postgresql_autocompletion(dbmocker_query_service())
+        ret = pa.on_query_completions(v, "", None)
+        self.assertEqual(
+            ret,
+            [
+                ["information_schema\tschema", "information_schema."],
+                ["pg_catalog\tschema", "pg_catalog."],
+                ["public\tschema", "public."],
+                ["test_schema\tschema", "test_schema."],
+                ["test_schema2\tschema", "test_schema2."],
+                ["test1_public\ttable in public", "test1_public"],
+                ["test2_public\ttable in public", "test2_public"]])
 
 class test_autocompletion(unittest.TestCase):
 
