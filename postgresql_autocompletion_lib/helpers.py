@@ -20,7 +20,6 @@ def getQueryText(view):
     '''Returns the text of the current query (at the cursor)
     and the position of the cursor relative to the beginning of the query'''
     # searching backwards until semicolon
-    print(view.size())
     beg = view.sel()[0].begin() - 1
     while view.substr(beg) != ";" and beg > 1:
         beg -= 1

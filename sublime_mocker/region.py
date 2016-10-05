@@ -35,3 +35,6 @@ class Region():
 
     def __str__(self):
         return str((self.a, self.b))
+
+    def toList(self):
+        return [self.a, self.b]
