@@ -44,14 +44,33 @@ class View():
         '''Returns a modified copy of region reg such that it starts at the
         beginning of a word, and ends at the end of a word.
         Note that it may span several words.'''
+        positive = ['\w', '[][!"#$%&\'()*+,./:;<=>?@\^`{|}~-]', '\s']
+        negative = ['\W', '[^][!"#$%&\'()*+,./:;<=>?@\^`{|}~-]', '\S']
+
+        search = '\W'
         beg = reg.a
+        for i in range(len(positive)):
+            if (
+                    re.match(positive[i], self._text[beg]) or
+                    beg > 0 and re.match(positive[i], self._text[beg - 1])):
+                search = negative[i]
+                break
         while beg > 0:
-            if re.match('\W', self._text[beg - 1]):
+            if re.match(search, self._text[beg - 1]):
                 break
             beg -= 1
+
+        search = '\W'
         end = reg.b
+        for i in range(len(positive)):
+            if (
+                    end < len(self._text) and
+                    re.match(positive[i], self._text[end])) or \
+                    re.match(positive[i], self._text[end - 1]):
+                search = negative[i]
+                break
         while end < len(self._text):
-            if re.match('\W', self._text[end]):
+            if re.match(search, self._text[end]):
                 break
             end += 1
         return region.Region(beg, end)

@@ -88,6 +88,12 @@ class sublime_mocker(unittest.TestCase):
         view.set_text("a  b")
         self.assertEqual(view.word(sublime.region.Region(2, 2)).toList(),
                          sublime.region.Region(1, 3).toList())
+        view.set_text("a  b")
+        self.assertEqual(view.word(sublime.region.Region(1, 1)).toList(),
+                         sublime.region.Region(0, 1).toList())
+        view.set_text("a  b")
+        self.assertEqual(view.word(sublime.region.Region(3, 3)).toList(),
+                         sublime.region.Region(3, 4).toList())
 
     def testLoadSettings(self):
         '''Test default settings'''
