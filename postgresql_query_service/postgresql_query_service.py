@@ -47,11 +47,10 @@ class postgresql_query_service(database_query_service):
             sql = '''
                 SELECT table_name, table_schema
                     FROM information_schema.tables
-                    WHERE table_schema = ANY (ARRAY(
-                        SELECT regexp_split_to_array(setting, ',\W')
+                    WHERE table_schema::text = ANY(string_to_array((
+                        SELECT setting
                             FROM pg_settings
-                            WHERE name = 'search_path'))
-                    ORDER BY table_name, table_schema'''
+                            WHERE name = 'search_path'), ','));'''
         else:
             sql = '''
                 SELECT table_name, table_schema
