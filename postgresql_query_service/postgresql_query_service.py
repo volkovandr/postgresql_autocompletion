@@ -50,7 +50,7 @@ class postgresql_query_service(database_query_service):
                     WHERE table_schema::text = ANY(string_to_array((
                         SELECT setting
                             FROM pg_settings
-                            WHERE name = 'search_path'), ','));'''
+                            WHERE name = 'search_path'), ', '));'''
         else:
             sql = '''
                 SELECT table_name, table_schema

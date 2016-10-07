@@ -43,6 +43,8 @@ class postgresql_autocompletion(sublime_plugin.EventListener):
             self.dbConnect()
         query_text, cursor_pos = getQueryText(view)
         self.base_parse_results = base_parse(query_text)
+        if self.base_parse_results is None:
+            return []
         self.sql_block_at_cursor = cursorPositionInQuery(
             cursor_pos,
             self.base_parse_results)

@@ -57,16 +57,19 @@ def base_parse(query_text):
 
     selectKeyword = Keyword("SELECT", caseless=True)
     fromKeyword = Keyword("FROM", caseless=True)
-    separatorKeyword = selectKeyword | fromKeyword | StringEnd()
+    separatorKeyword = selectKeyword | fromKeyword | ';' | StringEnd()
 
     selectBlock = selectKeyword + \
         locatedExpr(SkipTo(separatorKeyword)).setResultsName("selectList")
     fromBlock = fromKeyword + \
         locatedExpr(SkipTo(separatorKeyword)).setResultsName("fromList")
 
-    query = selectBlock + Optional(fromBlock)
+    query = selectBlock + Optional(fromBlock) + Optional(';')
 
-    tokens = query.parseString(query_text)
+    try:
+        tokens = query.parseString(query_text)
+    except ParseException:
+        return None
 
     ret = {}
     addToDict(ret, "select", tokens.selectList)
