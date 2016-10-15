@@ -16,7 +16,7 @@ table_or_schemaname = \
 schema_name_and_dot = schemaname + "." + Optional(as_keyword) + \
     Optional(alias)
 
-nothing = White().setResultsName('nothing') + (FollowedBy(",") | FollowedBy(StringEnd()))
+nothing = Optional(White()).setResultsName('nothing') + (FollowedBy(",") | FollowedBy(StringEnd()))
 
 
 from_element = Suppress(StringStart() | ",") + \
@@ -36,41 +36,42 @@ def test(test_str):
         tokens = parse.scanString(test_str)
         for substring in tokens:
             from_element = substring[0]
-            print(">>>>>", test_str[substring[1]:substring[2]])
-            if from_element.tablename != '':
+            print(">>>>>", "'" + test_str[substring[1]:substring[2]] + "'")
+            if from_element.tablename:
                 print(
                     "Tablename:",
                     '"' + str(from_element.tablename[1]) + '"',
                     str(from_element.tablename[0]) + ":" +
                     str(from_element.tablename[2]))
-            if from_element.table_or_schemaname != '':
+            if from_element.table_or_schemaname:
                 print(
                     "Table- or schemaname:",
                     '"' + str(from_element.table_or_schemaname[1]) + '"',
                     str(from_element.table_or_schemaname[0]) + ":" +
                     str(from_element.table_or_schemaname[2]))
-            if from_element.alias != '':
+            if from_element.alias:
                 print(
                     "Alias:",
                     '"' + str(from_element.alias[1]) + '"',
                     str(from_element.alias[0]) + ":" +
                     str(from_element.alias[2]))
-            if from_element.schemaname != '':
+            if from_element.schemaname:
                 print(
                     "Schemaname:",
                     '"' + str(from_element.schemaname[1]) + '"',
                     str(from_element.schemaname[0]) + ":" +
                     str(from_element.schemaname[2]))
-            if from_element.schemaname_and_dot != '':
+            if from_element.schemaname_and_dot:
                 print(
                     "Tablename (empty):",
                     str(from_element.schemaname[2] + 1) + ":" +
                     str(from_element.schemaname[2] + 1))
-            if from_element.nothing != '':
+            if from_element.nothing or (len(from_element) == 0 and substring[1] != substring[2]):
                 print(
                     "Table or schemaname (empty):",
                     '"' + str(from_element.nothing) + '"',
                     str(substring[1] + 1) + ":" + str(substring[2]))
+
     except ParseException as e:
         print(e)
     print()
@@ -83,7 +84,8 @@ test_strings = [
     "table1,           , table2",
     " ,      ",
     "table, ",
-    "bla bla bla",
+    "table1,",
+    "bla bla,bla",
     "mok."]
 
 for test_str in test_strings:
