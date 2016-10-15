@@ -86,7 +86,9 @@ test_strings = [
     "table, ",
     "table1,",
     "bla bla,bla",
-    "mok."]
+    "mok.",
+    "a b c d",
+    "  "]
 
 for test_str in test_strings:
     test(test_str)

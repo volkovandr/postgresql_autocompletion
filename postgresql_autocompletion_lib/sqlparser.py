@@ -8,7 +8,6 @@ else:
     from ..postgresql_autocompletion_lib.pyparsing import *
 
 
-
 def addToDict(dict_, key, token):
     if token and token != '':
         dict_[key] = (token[1], token[0], token[2])
@@ -64,7 +63,8 @@ def base_parse(query_text):
     fromBlock = fromKeyword + \
         locatedExpr(SkipTo(separatorKeyword)).setResultsName("fromList")
 
-    query = selectBlock + Optional(fromBlock) + Optional(';')
+    query = selectBlock + Optional(fromBlock) +\
+        Optional(White().setResultsName("ws_after_from")) + Optional(';')
 
     try:
         tokens = query.parseString(query_text)
@@ -72,10 +72,17 @@ def base_parse(query_text):
         return None
 
     ret = {}
+    # Whitestpace afther the table list should be included in the "from" part
+    # because cursor can be there (before semicolon) and autocompletion sholuld
+    # work in this case
+    if tokens.ws_after_from != '':
+        tokens.fromList[1] += tokens.ws_after_from
+        tokens.fromList[2] += len(tokens.ws_after_from)
     addToDict(ret, "select", tokens.selectList)
     addToDict(ret, "from", tokens.fromList)
 
     return ret
+
 
 def parseFrom(from_clause_text):
     '''Parses the FROM clause.
@@ -101,8 +108,14 @@ def parseFrom(from_clause_text):
     it is a schema or table name, ergo "schema_or_table_name" is returned.
     '''
     ret = []
-    if from_clause_text is None or from_clause_text == '':
+    if from_clause_text is None:
         return ret
+    if (
+            from_clause_text == '' or
+            len([x for x in from_clause_text if x != ' ']) == 0):
+        return [
+            {"schema_or_table_name":
+                (from_clause_text, 0, len(from_clause_text))}]
 
     identifier = Word(alphas + "_", alphanums + "_").setName("identifier")
     as_keyword = Keyword("as", caseless=True).setName("AS")
@@ -116,15 +129,19 @@ def parseFrom(from_clause_text):
     unqualified_table_name = tablename + Optional(as_keyword) + alias
     table_or_schemaname = \
         locatedExpr(identifier).setResultsName("table_or_schemaname")
+
     schema_name_and_dot = schemaname + "." + Optional(as_keyword) + \
         Optional(alias)
+
+    nothing = Optional(White()).setResultsName('nothing') + \
+        (FollowedBy(",") | FollowedBy(StringEnd()))
 
     from_element = Suppress(StringStart() | ",") + \
         (
             full_qualified_table_name |
             schema_name_and_dot.setResultsName("schemaname_and_dot") |
             unqualified_table_name |
-            table_or_schemaname) + \
+            table_or_schemaname | nothing) + \
         (FollowedBy(",") | FollowedBy(StringEnd()))
 
     for parsed_from_element in from_element.scanString(from_clause_text):
@@ -141,6 +158,18 @@ def parseFrom(from_clause_text):
         addToDict(parse_result, "alias", tokens.alias)
         addToDict(parse_result, "schema_or_table_name",
                   tokens.table_or_schemaname)
+
+        if (
+                tokens.nothing or
+                (len(tokens) == 0 and
+                 parsed_from_element[1] != parsed_from_element[2])):
+            addToDict(
+                parse_result, "schema_or_table_name",
+                [
+                    parsed_from_element[1] + 1,
+                    str(tokens.nothing),
+                    parsed_from_element[2]])
+
         ret.append(parse_result)
 
     return ret

@@ -66,6 +66,25 @@ class corner_cases(unittest.TestCase):
                 ["test1_public\ttable in public", "test1_public"],
                 ["test2_public\ttable in public", "test2_public"]])
 
+    def testCursorBeforeSemicolonMultipleTables(self):
+        '''Plugin works when the cursor is just before semicolon'''
+        print('***************************')
+        v = View()
+        v.set_text("SELECT a, b, c FROM schema.table, ;")
+        v.add_selection(Selection(34, 34))
+        pa = postgresql_autocompletion(dbmocker_query_service())
+        ret = pa.on_query_completions(v, "", None)
+        self.assertEqual(
+            ret,
+            [
+                ["information_schema\tschema", "information_schema."],
+                ["pg_catalog\tschema", "pg_catalog."],
+                ["public\tschema", "public."],
+                ["test_schema\tschema", "test_schema."],
+                ["test_schema2\tschema", "test_schema2."],
+                ["test1_public\ttable in public", "test1_public"],
+                ["test2_public\ttable in public", "test2_public"]])
+
     def testNotAQuery(self):
         '''Plugin returns nothing when this is not a query at all'''
         v = View()
@@ -77,7 +96,8 @@ class corner_cases(unittest.TestCase):
             ret,
             [])
 
-class test_autocompletion(unittest.TestCase):
+
+class test_from_autocompletion(unittest.TestCase):
 
     def testCursorAtSchemaName(self):
         '''Returns schema names when cursor stands in the name of a schema'''
@@ -120,10 +140,27 @@ class test_autocompletion(unittest.TestCase):
         v.set_text("SELECT a, b, c FROM test_schema.t")
         v.add_selection(Selection(33, 33))
         pa = postgresql_autocompletion(dbmocker_query_service())
-        ret = pa.on_query_completions(v, "ta", None)
+        ret = pa.on_query_completions(v, "t", None)
         self.assertEqual(
             ret,
             [
                 ["table1_test1\ttable in test_schema", "table1_test1"],
                 ["table2_test1\ttable in test_schema", "table2_test1"]])
 
+    def testMultipleTables(self):
+        '''Returns schema or table names when cursor is just after the comma'''
+        v = View()
+        v.set_text("SELECT a, b, c FROM public.table1, ")
+        v.add_selection(Selection(35, 35))
+        pa = postgresql_autocompletion(dbmocker_query_service())
+        ret = pa.on_query_completions(v, "", None)
+        self.assertEqual(
+            ret,
+            [
+                ["information_schema\tschema", "information_schema."],
+                ["pg_catalog\tschema", "pg_catalog."],
+                ["public\tschema", "public."],
+                ["test_schema\tschema", "test_schema."],
+                ["test_schema2\tschema", "test_schema2."],
+                ["test1_public\ttable in public", "test1_public"],
+                ["test2_public\ttable in public", "test2_public"]])

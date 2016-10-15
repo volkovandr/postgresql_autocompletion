@@ -21,7 +21,12 @@ class basic_parser_tests(unittest.TestCase):
     def testParseFrom(self):
         '''parseFrom works'''
         test_cases = [
-            ("", []),
+            ("", [{"schema_or_table_name": ("", 0, 0)}]),
+            ("  ", [{"schema_or_table_name": ("  ", 0, 2)}]),
+            ("schema.table, ", [
+                {"schema_name": ("schema", 0, 6),
+                 "table_name": ("table", 7, 12)},
+                {"schema_or_table_name": (" ", 13, 14)}]),
             ("table1", [{"schema_or_table_name": ("table1", 0, 6)}]),
             ("table1 as t1", [{"table_name": ("table1", 0, 6),
                                "alias": ("t1", 10, 12)}]),
