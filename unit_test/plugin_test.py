@@ -85,6 +85,21 @@ class corner_cases(unittest.TestCase):
                 ["test1_public\ttable in public", "test1_public"],
                 ["test2_public\ttable in public", "test2_public"]])
 
+    def testCursorBeforeSemicolonMultipleQueries(self):
+        '''Plugin works when the cursor is just before semicolon'''
+        print('***************************')
+        v = View()
+        v.set_text("SELECT a, b, c FROM schema.table; "
+                   " SELECT a, b, c FROM test_schema.;")
+        v.add_selection(Selection(67, 67))
+        pa = postgresql_autocompletion(dbmocker_query_service())
+        ret = pa.on_query_completions(v, "", None)
+        self.assertEqual(
+            ret,
+            [
+                ["table1_test1\ttable in test_schema", "table1_test1"],
+                ["table2_test1\ttable in test_schema", "table2_test1"]])
+
     def testNotAQuery(self):
         '''Plugin returns nothing when this is not a query at all'''
         v = View()
