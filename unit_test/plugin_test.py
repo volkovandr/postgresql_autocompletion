@@ -68,7 +68,6 @@ class corner_cases(unittest.TestCase):
 
     def testCursorBeforeSemicolonMultipleTables(self):
         '''Plugin works when the cursor is just before semicolon'''
-        print('***************************')
         v = View()
         v.set_text("SELECT a, b, c FROM schema.table, ;")
         v.add_selection(Selection(34, 34))
@@ -87,7 +86,6 @@ class corner_cases(unittest.TestCase):
 
     def testCursorBeforeSemicolonMultipleQueries(self):
         '''Plugin works when the cursor is just before semicolon'''
-        print('***************************')
         v = View()
         v.set_text("SELECT a, b, c FROM schema.table; "
                    " SELECT a, b, c FROM test_schema.;")

@@ -31,11 +31,12 @@ def getQueryText(view):
         if view.substr(end) == ";":
             break
         end += 1
-    query_text = \
-        view.substr(view.word(sublime.Region(beg, end))).strip()
+    query_text_with_spaces = \
+        view.substr(view.word(sublime.Region(beg, end)))
+    query_text = query_text_with_spaces.strip()
     cursor_pos = view.sel()[0].begin() - \
         view.word(sublime.Region(beg, end)).begin() - \
-        (len(query_text) - len(query_text.lstrip()))
+        (len(query_text_with_spaces) - len(query_text_with_spaces.lstrip()))
     if cursor_pos > len(query_text):
         cursor_pos = len(query_text)
     return (query_text, cursor_pos)
